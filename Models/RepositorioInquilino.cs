@@ -19,7 +19,7 @@ namespace inmobiliaria_Heredia.Models {
                 string sql = @"
                     INSERT INTO Inquilino (nombre, apellido, DNI, telefono, Email)
                     VALUES (@nombre, @apellido, @dni, @telefono, @email);
-                    SELECT SCOPE_IDENTITY();";
+                    SELECT LAST_INSERT_ID();";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
 
                     command.CommandType = CommandType.Text;
@@ -31,7 +31,7 @@ namespace inmobiliaria_Heredia.Models {
                     
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
-                    i.Id = res;
+                    i.idInquilino = res;
                     connection.Close();
                 }
             }
@@ -43,7 +43,7 @@ namespace inmobiliaria_Heredia.Models {
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
                 string sql = @"
                     DELETE FROM Inquilino
-                    WHERE Id = @id";
+                    WHERE idInquilino = @id";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
                     command.CommandType = CommandType.Text;
                     command.Parameters.AddWithValue(@"id", id);
@@ -62,7 +62,7 @@ namespace inmobiliaria_Heredia.Models {
                 string sql = @"
                     UPDATE Inquilino
                     SET nombre = @nombre, apellido = @apellido, DNI = @dni, telefono = @telefono, Email = @email
-                    WHERE Id = @id";
+                    WHERE idInquilino = @id";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
                     command.CommandType = CommandType.Text;
                     command.Parameters.AddWithValue("@nombre", i.nombre);
@@ -70,7 +70,7 @@ namespace inmobiliaria_Heredia.Models {
                     command.Parameters.AddWithValue("@dni", i.DNI);
                     command.Parameters.AddWithValue("@telefono", i.telefono);
                     command.Parameters.AddWithValue("@email", i.Email);
-                    command.Parameters.AddWithValue("@id", i.Id);
+                    command.Parameters.AddWithValue("@id", i.idInquilino);
 
                     connection.Open();
                     res = command.ExecuteNonQuery();
@@ -83,8 +83,8 @@ namespace inmobiliaria_Heredia.Models {
             IList<Inquilino> res = new List<Inquilino>();
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
 
-                String sql = @"
-                    SELECT Id, nombre, apellido, DNI, telefono, Email
+                string sql = @"
+                    SELECT idInquilino, nombre, apellido, DNI, telefono, Email
                     FROM Inquilino";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
 
@@ -94,7 +94,7 @@ namespace inmobiliaria_Heredia.Models {
                     var reader = command.ExecuteReader();
                     while (reader.Read()) {
                         Inquilino i = new Inquilino {
-                            Id = reader.GetInt32(0),
+                            idInquilino = reader.GetInt32(0),
                             nombre = reader.GetString(1),
                             apellido = reader.GetString(2),
                             DNI = reader.GetString(3),
@@ -106,29 +106,25 @@ namespace inmobiliaria_Heredia.Models {
                     connection.Close();
                 }
             }
-
             return res;
         }
 
         public Inquilino ObtenerPorId(int id) {
             Inquilino i = null;
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
-
                 string sql = @"
-                    SELECT Id, nombre, apellido, DNI, telefono, Email
+                    SELECT idInquilino, nombre, apellido, DNI, telefono, Email
                     FROM Inquilino
-                    WHERE Id = @id";
+                    WHERE idInquilino = @id";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
-
                     command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
                     command.CommandType = CommandType.Text;
 
                     connection.Open();
                     var reader = command.ExecuteReader();
                     if(reader.Read()) {
-                        
                         i = new Inquilino {
-                            Id = reader.GetInt32(0),
+                            idInquilino = reader.GetInt32(0),
                             nombre = reader.GetString(1),
                             apellido = reader.GetString(2),
                             DNI = reader.GetString(3),

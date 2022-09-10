@@ -4,16 +4,16 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Índice Inquilinos</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Nuevo Inquilino</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Id)
+                @Html.DisplayNameFor(model => model.idInquilino)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.nombre)
@@ -37,7 +37,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Id)
+                @Html.DisplayFor(modelItem => item.idInquilino)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.nombre)
@@ -55,9 +55,9 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+                @Html.ActionLink("Editar", "Edit", new { id=item.idInquilino }) |
+                @Html.ActionLink("Detalles", "Details", new { id=item.idInquilino }) |
+                @Html.ActionLink("Borrar", "Delete", new { id=item.idInquilino })
             </td>
         </tr>
 }

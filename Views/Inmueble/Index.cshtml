@@ -1,0 +1,83 @@
+@model IEnumerable<inmobiliaria_Heredia.Models.Inmueble>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Índice Inmuebles</h1>
+
+<p>
+    <a asp-action="Create">Nuevo Inmueble</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.idInmueble)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.direccion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.uso)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.tipo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cantAmbientes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.coordenadas)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.precio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.disponible)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.propietarioId)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.idInmueble)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.direccion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UsoNombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TipoNombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.cantAmbientes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.coordenadas)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.precio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.disponible)
+            </td>
+            <td>
+                @(item.duenio.apellido + ", " + item.duenio.nombre)
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { id=item.idInmueble }) |
+                @Html.ActionLink("Detalles", "Details", new { id=item.idInmueble }) |
+                @Html.ActionLink("Borrar", "Delete", new { id=item.idInmueble })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

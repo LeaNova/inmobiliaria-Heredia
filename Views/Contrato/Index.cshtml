@@ -1,0 +1,65 @@
+@model IEnumerable<inmobiliaria_Heredia.Models.Contrato>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Índice de Contratos</h1>
+
+<p>
+    <a asp-action="Create">Nuevo Contrato</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.idContrato)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fechaInicio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fechaFinal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.alquilerMensual)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.inmuebleId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.inquilinoId)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.idContrato)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fechaInicio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fechaFinal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.alquilerMensual)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.inmuebleId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.inquilinoId)
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { id=item.idContrato }) |
+                @Html.ActionLink("Detalles", "Details", new { id=item.idContrato }) |
+                @Html.ActionLink("Borrar", "Delete", new { id=item.idContrato })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -34,7 +34,6 @@ namespace inmobiliaria_Heredia.Controllers {
         [ValidateAntiForgeryToken]
         public ActionResult Create(Propietario p) {
             try {
-                // TODO: Add insert logic here
                 if(ModelState.IsValid) {
                     rp.Alta(p);
                     return RedirectToAction(nameof(Index));
@@ -42,8 +41,8 @@ namespace inmobiliaria_Heredia.Controllers {
                 } else {
                     return View(p);
                 }
-            } catch {
-                return View();
+            } catch (Exception ex) {
+                throw;
             }
         }
 
@@ -56,22 +55,14 @@ namespace inmobiliaria_Heredia.Controllers {
         // POST: Propietario/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection) {
-            Propietario p = null;
+        public ActionResult Edit(int id, Propietario p) {
             try {
-                // TODO: Add update logic here
-                p = rp.ObtenerPorId(id);
-
-                p.nombre = collection["nombre"];
-                p.apellido = collection["apellido"];
-                p.DNI = collection["DNI"];
-                p.telefono = collection["telefono"];
-                p.Email = collection["Email"];
-
+                p.idPropietario = id;
                 rp.Modificar(p);
+
                 return RedirectToAction(nameof(Index));
-            } catch {
-                return View();
+            } catch (Exception ex) {
+                throw;
             }
         }
 
@@ -86,11 +77,10 @@ namespace inmobiliaria_Heredia.Controllers {
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection) {
             try {
-                // TODO: Add delete logic here
                 rp.Baja(id);
                 return RedirectToAction(nameof(Index));
-            } catch {
-                return View();
+            } catch (Exception ex) {
+                throw;
             }
         }
     }

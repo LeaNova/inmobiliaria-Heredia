@@ -1,0 +1,74 @@
+@model inmobiliaria_Heredia.Models.Inmueble
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Borrar</h1>
+
+<h3>¿Quieres borrar este inmueble?</h3>
+<div>
+    <h4>Inmueble</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.idInmueble)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.idInmueble)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.direccion)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.direccion)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.uso)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.uso)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.tipo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.tipo)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.cantAmbientes)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cantAmbientes)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.coordenadas)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.coordenadas)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.precio)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.precio)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.disponible)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.disponible)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.propietarioId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.propietarioId)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="submit" value="Borrar" class="btn btn-danger" /> |
+        <a asp-action="Index">Volver</a>
+    </form>
+</div>

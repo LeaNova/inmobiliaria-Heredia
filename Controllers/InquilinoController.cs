@@ -34,7 +34,6 @@ namespace inmobiliaria_Heredia.Controllers {
         [ValidateAntiForgeryToken]
         public ActionResult Create(Inquilino i) {
             try {
-                // TODO: Add insert logic here
                 if(ModelState.IsValid) {
                     ri.Alta(i);
                     return RedirectToAction(nameof(Index)); 
@@ -42,8 +41,8 @@ namespace inmobiliaria_Heredia.Controllers {
                 } else {
                     return View(i);
                 }
-            } catch {
-                return View();
+            } catch (Exception ex) {
+                throw;
             }
         }
 
@@ -56,22 +55,14 @@ namespace inmobiliaria_Heredia.Controllers {
         // POST: Inquilino/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection) {
-            Inquilino i = null;
+        public ActionResult Edit(int id, Inquilino i) {
             try {
-                // TODO: Add update logic here
-                i = ri.ObtenerPorId(id);
-
-                i.nombre = collection["nombre"];
-                i.apellido = collection["apellido"];
-                i.DNI = collection["DNI"];
-                i.telefono = collection["telefono"];
-                i.Email = collection["Email"];
-
+                i.idInquilino = id;
                 ri.Modificar(i);
+
                 return RedirectToAction(nameof(Index));
-            } catch {
-                return View();
+            } catch (Exception ex) {
+                throw;
             }
         }
 
@@ -84,13 +75,12 @@ namespace inmobiliaria_Heredia.Controllers {
         // POST: Inquilino/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection) {
+        public ActionResult Delete(int id, Inquilino i) {
             try {
-                // TODO: Add delete logic here
                 ri.Baja(id);
                 return RedirectToAction(nameof(Index));
-            } catch {
-                return View();
+            } catch (Exception ex) {
+                throw;
             }
         }
     }

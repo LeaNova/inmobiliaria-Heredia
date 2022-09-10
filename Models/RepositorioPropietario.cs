@@ -19,7 +19,7 @@ namespace inmobiliaria_Heredia.Models {
                 string sql = @"
                     INSERT INTO Propietario (nombre, apellido, DNI, telefono, Email)
                     VALUES (@nombre, @apellido, @dni, @telefono, @email);
-                    SELECT SCOPE_IDENTITY();";
+                    SELECT LAST_INSERT_ID();";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
 
                     command.CommandType = CommandType.Text;
@@ -31,7 +31,7 @@ namespace inmobiliaria_Heredia.Models {
                     
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
-                    p.Id = res;
+                    p.idPropietario = res;
                     connection.Close();
                 }
             }
@@ -43,7 +43,7 @@ namespace inmobiliaria_Heredia.Models {
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
                 string sql = @"
                     DELETE FROM propietario
-                    WHERE Id = @id";
+                    WHERE idPropietario = @id";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
                     command.CommandType = CommandType.Text;
                     command.Parameters.AddWithValue(@"id", id);
@@ -62,7 +62,7 @@ namespace inmobiliaria_Heredia.Models {
                 string sql = @"
                     UPDATE propietario
                     SET nombre = @nombre, apellido = @apellido, DNI = @dni, telefono = @telefono, Email = @email
-                    WHERE Id = @id";
+                    WHERE idPropietario = @id";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
                     command.CommandType = CommandType.Text;
                     command.Parameters.AddWithValue("@nombre", p.nombre);
@@ -70,7 +70,7 @@ namespace inmobiliaria_Heredia.Models {
                     command.Parameters.AddWithValue("@dni", p.DNI);
                     command.Parameters.AddWithValue("@telefono", p.telefono);
                     command.Parameters.AddWithValue("@email", p.Email);
-                    command.Parameters.AddWithValue("@id", p.Id);
+                    command.Parameters.AddWithValue("@id", p.idPropietario);
 
                     connection.Open();
                     res = command.ExecuteNonQuery();
@@ -83,8 +83,8 @@ namespace inmobiliaria_Heredia.Models {
             IList<Propietario> res = new List<Propietario>();
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
 
-                String sql = @"
-                    SELECT Id, nombre, apellido, DNI, telefono, Email
+                string sql = @"
+                    SELECT idPropietario, nombre, apellido, DNI, telefono, Email
                     FROM Propietario";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
 
@@ -94,7 +94,7 @@ namespace inmobiliaria_Heredia.Models {
                     var reader = command.ExecuteReader();
                     while (reader.Read()) {
                         Propietario p = new Propietario {
-                            Id = reader.GetInt32(0),
+                            idPropietario = reader.GetInt32(0),
                             nombre = reader.GetString(1),
                             apellido = reader.GetString(2),
                             DNI = reader.GetString(3),
@@ -115,9 +115,9 @@ namespace inmobiliaria_Heredia.Models {
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
 
                 string sql = @"
-                    SELECT Id, nombre, apellido, DNI, telefono, Email
+                    SELECT idPropietario, nombre, apellido, DNI, telefono, Email
                     FROM propietario
-                    WHERE Id = @id";
+                    WHERE idPropietario = @id";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
 
                     command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
@@ -128,7 +128,7 @@ namespace inmobiliaria_Heredia.Models {
                     if(reader.Read()) {
                         
                         p = new Propietario {
-                            Id = reader.GetInt32(0),
+                            idPropietario = reader.GetInt32(0),
                             nombre = reader.GetString(1),
                             apellido = reader.GetString(2),
                             DNI = reader.GetString(3),
