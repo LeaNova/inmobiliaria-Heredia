@@ -46,13 +46,13 @@
                 @Html.DisplayFor(modelItem => item.fechaFinal)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.alquilerMensual)
+                @("$ " + item.alquilerMensual)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.inmuebleId)
+                @(item.propiedad.direccion)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.inquilinoId)
+                @(item.inquilino.apellido + ", " + item.inquilino.nombre)
             </td>
             <td>
                 @Html.ActionLink("Editar", "Edit", new { id=item.idContrato }) |

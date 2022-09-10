@@ -6,7 +6,7 @@ using inmobiliaria_Heredia.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace inmueble_Heredia.Controllers {
+namespace inmobiliaria_Heredia.Controllers {
     public class ContratoController : Controller {
 
         private RepositorioContrato rc = new RepositorioContrato();
@@ -21,7 +21,7 @@ namespace inmueble_Heredia.Controllers {
 
         // GET: Contrato/Details/5
         public ActionResult Details(int id) {
-            var resultado = rc.ObtenerPorId;
+            var resultado = rc.ObtenerPorId(id);
             return View(resultado);
         }
 
@@ -37,9 +37,15 @@ namespace inmueble_Heredia.Controllers {
         [ValidateAntiForgeryToken]
         public ActionResult Create(Contrato c) {
             try {
-                if(ModelState.IsValid) {
-                    rc.Alta(c);
-                    return RedirectToAction(nameof(Index));
+                if(!ModelState.IsValid) {
+                    if(c.fechaFinal > c.fechaInicio) {
+                        rc.Alta(c);
+                        return RedirectToAction(nameof(Index));
+                    } else {
+                        ViewBag.Inmueble = rInm.ObtenerTodos();
+                        ViewBag.Inquilino = rInq.ObtenerTodos();
+                        return View(c);
+                    }
                 } else {
                     ViewBag.Inmueble = rInm.ObtenerTodos();
                     ViewBag.Inquilino = rInq.ObtenerTodos();

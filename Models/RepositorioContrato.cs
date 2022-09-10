@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace inmobiliaria_Heredia.Models {
-
     public class RepositorioContrato : RepositorioBase {
 
         public RepositorioContrato() : base() {
@@ -47,7 +46,7 @@ namespace inmobiliaria_Heredia.Models {
                     WHERE idContrato = @id";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
                     command.CommandType = CommandType.Text;
-                    command.Parameters.AddWithValue(@"id", id);
+                    command.Parameters.AddWithValue("@id", id);
 
                     connection.Open();
                     res = command.ExecuteNonQuery();
@@ -72,6 +71,7 @@ namespace inmobiliaria_Heredia.Models {
                     command.Parameters.AddWithValue("@alquilerMensual", c.alquilerMensual);
                     command.Parameters.AddWithValue("@inmuebleId", c.inmuebleId);
                     command.Parameters.AddWithValue("@inquilinoId", c.inquilinoId);
+                    command.Parameters.AddWithValue("@id", c.idContrato);
 
                     connection.Open();
                     res = command.ExecuteNonQuery();
@@ -85,7 +85,7 @@ namespace inmobiliaria_Heredia.Models {
             IList<Contrato> res = new List<Contrato>();
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
                 String sql = @"
-                    SELECT fechaInicio, fechaFinal, alquilerMensual, inmuebleId, inquilinoId, inm.direccion, inq.nombre, inq.apellido
+                    SELECT idContrato, fechaInicio, fechaFinal, alquilerMensual, inmuebleId, inquilinoId, inm.direccion, inq.nombre, inq.apellido
                     FROM Contrato c
                     INNER JOIN Inmueble inm ON c.inmuebleId = inm.idInmueble
                     INNER JOIN Inquilino inq ON c.inquilinoId = inq.idInquilino";
@@ -124,8 +124,8 @@ namespace inmobiliaria_Heredia.Models {
         public Contrato ObtenerPorId(int id) {
             Contrato c = null;
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
-                String sql = @"
-                    SELECT fechaInicio, fechaFinal, alquilerMensual, inmuebleId, inquilinoId, inm.direccion, inq.nombre, inq.apellido
+                string sql = @"
+                    SELECT idContrato, fechaInicio, fechaFinal, alquilerMensual, inmuebleId, inquilinoId, inm.direccion, inq.nombre, inq.apellido
                     FROM Contrato c
                     INNER JOIN Inmueble inm ON c.inmuebleId = inm.idInmueble
                     INNER JOIN Inquilino inq ON c.inquilinoId = inq.idInquilino

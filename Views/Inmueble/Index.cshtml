@@ -64,10 +64,10 @@
                 @Html.DisplayFor(modelItem => item.coordenadas)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.precio)
+                @("$ " + item.precio)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.disponible)
+                @(item.disponible ? "Si" : "No")
             </td>
             <td>
                 @(item.duenio.apellido + ", " + item.duenio.nombre)

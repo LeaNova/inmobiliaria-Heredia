@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace inmobiliaria_Heredia.Controllers {
-
     public class InquilinoController : Controller {
         
         private RepositorioInquilino ri = new RepositorioInquilino();
