@@ -3,21 +3,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace inmobiliaria_Heredia.Models;
 
-public enum enUsos {
-    Residencial = 1,
-    Comercial = 2
-}
-
-public enum enTipos {
-    Casa = 1,
-    Departamento = 2,
-    Local = 3,
-    Depósito = 4,
-    Oficinas = 5,
-    Individual = 6
-}
-
 public class Inmueble {
+    public enum enUsos {
+        Residencial = 1,
+        Comercial = 2
+    }
+
+    public enum enTipos {
+        Casa = 1,
+        Departamento = 2,
+        Local = 3,
+        Depósito = 4,
+        Oficinas = 5,
+        Individual = 6
+    }
 
     [Display(Name = "Código")]
     public int idInmueble { get; set; }
