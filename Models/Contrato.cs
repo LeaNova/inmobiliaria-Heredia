@@ -22,10 +22,21 @@ public class Contrato {
 
     [Display(Name = "Inquilino")]
     public int inquilinoId { get; set; }
+
+    //new
+    [Display(Name = "Pago")]
+    public int pagoId { get; set; }
+
+    //new
+    public bool vigente { get; set; }
     
     [ForeignKey(nameof(inmuebleId))]
     public Inmueble propiedad { get; set; }
 
     [ForeignKey(nameof(inquilinoId))]
     public Inquilino inquilino { get; set; }
+
+    //new
+    [ForeignKey(nameof(pagoId))]
+    public Pago tipoPago { get; set; }
 }
