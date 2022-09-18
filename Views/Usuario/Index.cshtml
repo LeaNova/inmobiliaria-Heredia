@@ -1,0 +1,71 @@
+@model IEnumerable<inmobiliaria_Heredia.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.idUsuario)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.apellido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.user)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.avatar)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.access)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.idUsuario)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.apellido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.user)
+            </td>
+            @if (item.avatar != "") {
+                <td>
+                    <img width="32" src="@item.avatar" />
+                </td>
+            } else {
+                <td>
+                    <img width="32" src="\Uploads/user-image.png" />
+                </td>
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.AccessNombre)
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { id=item.idUsuario }) |
+                @Html.ActionLink("Detalles", "Details", new { id=item.idUsuario }) |
+                @Html.ActionLink("Borrar", "Delete", new { id=item.idUsuario })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

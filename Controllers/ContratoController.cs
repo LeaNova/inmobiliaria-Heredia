@@ -3,17 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using inmobiliaria_Heredia.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace inmobiliaria_Heredia.Controllers {
     public class ContratoController : Controller {
 
-        private RepositorioContrato rc = new RepositorioContrato();
-        private RepositorioInmueble rInm = new RepositorioInmueble();
-        private RepositorioInquilino rInq = new RepositorioInquilino();
+        private IRepositorioContrato rc;
+        private IRepositorioInmueble rInm;
+        private IRepositorioInquilino rInq;
+
+        public ContratoController(IRepositorioContrato rc, IRepositorioInmueble rInm, IRepositorioInquilino rInq) {
+            this.rc = rc;
+            this.rInm = rInm;
+            this.rInq = rInq;
+        }
 
         // GET: Contrato
+        [Authorize(Policy = "Usuario")]
         public ActionResult Index() {
             var lista = rc.ObtenerTodos();
             return View(lista);

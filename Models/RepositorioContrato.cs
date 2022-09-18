@@ -7,18 +7,18 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace inmobiliaria_Heredia.Models {
-    public class RepositorioContrato : RepositorioBase {
+    public class RepositorioContrato : RepositorioBase, IRepositorioContrato {
 
-        public RepositorioContrato() : base() {
+        public RepositorioContrato(IConfiguration configuration) : base(configuration) {
 
         }
 
         public int Alta(Contrato c) {
             int res = -1;
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
-                String sql = @"
-                    INSERT INTO Contrato (fechaInicio, fechaFinal, alquilerMensual, inmuebleId, inquilinoId)
-                    VALUES (@fechaInicio, @fechaFinal, @alquilerMensual, @inmuebleId, @inmuebleId);
+                string sql = @"
+                    INSERT INTO Contrato (fechaInicio, fechaFinal, alquilerMensual, inmuebleId, inquilinoId, pagoId)
+                    VALUES (@fechaInicio, @fechaFinal, @alquilerMensual @inmuebleId, @inmuebleId, @pagoId);
                     SELECT LAST_INSERT_ID();";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
 
@@ -27,7 +27,7 @@ namespace inmobiliaria_Heredia.Models {
                     command.Parameters.AddWithValue("@fechaFinal", c.fechaFinal);
                     command.Parameters.AddWithValue("@alquilerMensual", c.alquilerMensual);
                     command.Parameters.AddWithValue("@inmuebleId", c.inmuebleId);
-                    command.Parameters.AddWithValue(@"inquilinoId", c.inquilinoId);
+                    command.Parameters.AddWithValue("@inquilinoId", c.inquilinoId);
 
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
@@ -41,7 +41,7 @@ namespace inmobiliaria_Heredia.Models {
         public int Baja(int id) {
             int res = -1;
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
-                String sql = @"
+                string sql = @"
                     DELETE FROM Contrato
                     WHERE idContrato = @id";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
@@ -59,9 +59,9 @@ namespace inmobiliaria_Heredia.Models {
         public int Modificar(Contrato c) {
             int res = -1;
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
-                String sql = @"
+                string sql = @"
                     UPDATE Contrato
-                    SET fechaInicio = @fechaInicio, fechaFinal = @fechaFinal, alquilerMensual = @alquilerMensual, inmuebleId = @inmuebleId, inquilinoId = @inquilinoId
+                    SET fechaInicio = @fechaInicio, fechaFinal = @fechaFinal, alquilerMensual = @alquilerMensual, inmuebleId = @inmuebleId, inquilinoId = @inquilinoId, pagoId = @pagoId
                     WHERE idContrato = @id";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
 
@@ -84,7 +84,7 @@ namespace inmobiliaria_Heredia.Models {
         public IList<Contrato> ObtenerTodos() {
             IList<Contrato> res = new List<Contrato>();
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
-                String sql = @"
+                string sql = @"
                     SELECT idContrato, fechaInicio, fechaFinal, alquilerMensual, inmuebleId, inquilinoId, inm.direccion, inq.nombre, inq.apellido
                     FROM Contrato c
                     INNER JOIN Inmueble inm ON c.inmuebleId = inm.idInmueble

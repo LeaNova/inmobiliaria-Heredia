@@ -10,8 +10,13 @@ namespace inmobiliaria_Heredia.Controllers {
 
     public class InmuebleController : Controller {
 
-        private RepositorioInmueble ri = new RepositorioInmueble();
-        private RepositorioPropietario rp = new RepositorioPropietario();
+        private IRepositorioInmueble ri;
+        private IRepositorioPropietario rp;
+
+        public InmuebleController(IRepositorioInmueble ri, IRepositorioPropietario rp) {
+            this.ri = ri;
+            this.rp = rp;
+        }
 
         // GET: Inmueble
         public ActionResult Index() {
@@ -22,6 +27,7 @@ namespace inmobiliaria_Heredia.Controllers {
         // GET: Inmueble/Details/5
         public ActionResult Details(int id) {
             var resultado = ri.ObtenerPorId(id);
+            ViewBag.Propietario = rp.ObtenerPorId(resultado.propietarioId);
             return View(resultado);
         }
 

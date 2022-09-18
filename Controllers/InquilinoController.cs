@@ -9,7 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace inmobiliaria_Heredia.Controllers {
     public class InquilinoController : Controller {
         
-        private RepositorioInquilino ri = new RepositorioInquilino();
+        private IRepositorioInquilino ri;
+
+        public InquilinoController(IRepositorioInquilino ri) {
+            this.ri = ri;
+        }
 
         // GET: Inquilino
         public ActionResult Index() {
@@ -36,7 +40,6 @@ namespace inmobiliaria_Heredia.Controllers {
                 if(ModelState.IsValid) {
                     ri.Alta(i);
                     return RedirectToAction(nameof(Index)); 
-
                 } else {
                     return View(i);
                 }

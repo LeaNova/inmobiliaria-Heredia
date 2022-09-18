@@ -10,7 +10,13 @@ namespace inmobiliaria_Heredia.Controllers {
 
     public class PropietarioController : Controller {
 
-        private RepositorioPropietario rp = new RepositorioPropietario();
+        private IConfiguration configuration;
+        private IRepositorioPropietario rp;
+
+        public PropietarioController(IConfiguration configuration, IRepositorioPropietario rp) {
+            this.configuration = configuration;
+            this.rp = rp;
+        }
 
         // GET: Propietario
         public ActionResult Index() {
@@ -37,7 +43,6 @@ namespace inmobiliaria_Heredia.Controllers {
                 if(ModelState.IsValid) {
                     rp.Alta(p);
                     return RedirectToAction(nameof(Index));
-
                 } else {
                     return View(p);
                 }

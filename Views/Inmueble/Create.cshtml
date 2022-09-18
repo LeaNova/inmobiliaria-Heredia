@@ -53,6 +53,10 @@
                 <span asp-validation-for="precio" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <input type="checkbox" asp-for="disponible" class="form-control" checked hidden>
+                <span asp-validation-for="disponible" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label class="control-label">Propietario</label>
                 <select asp-for="propietarioId" class="form-control">
                     @foreach (var item in (IList<Propietario>)ViewBag.Propietario)

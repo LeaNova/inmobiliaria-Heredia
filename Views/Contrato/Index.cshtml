@@ -40,10 +40,10 @@
                 @Html.DisplayFor(modelItem => item.idContrato)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.fechaInicio)
+                @(item.fechaInicio.ToString("dd/MM/yyyy"))
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.fechaFinal)
+                @(item.fechaFinal.ToString("dd/MM/yyyy"))
             </td>
             <td>
                 @("$ " + item.alquilerMensual)
@@ -57,7 +57,9 @@
             <td>
                 @Html.ActionLink("Editar", "Edit", new { id=item.idContrato }) |
                 @Html.ActionLink("Detalles", "Details", new { id=item.idContrato }) |
-                @Html.ActionLink("Borrar", "Delete", new { id=item.idContrato })
+                @Html.ActionLink("Borrar", "Delete", new { id=item.idContrato }) |
+                @Html.ActionLink("Pagos", "Index", "Pago", new { id=item.idContrato}) |
+                @Html.ActionLink("Pagar", "Create", "Pago", new { id=item.idContrato})
             </td>
         </tr>
 }

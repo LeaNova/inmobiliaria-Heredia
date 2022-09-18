@@ -7,9 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace inmobiliaria_Heredia.Models {
-    public class RepositorioInquilino : RepositorioBase {
+    public class RepositorioInquilino : RepositorioBase, IRepositorioInquilino {
 
-        public RepositorioInquilino() : base() {
+        public RepositorioInquilino(IConfiguration configuration) : base(configuration) {
 
         }
 
@@ -79,6 +79,7 @@ namespace inmobiliaria_Heredia.Models {
             }
             return res;
         }
+        
         public IList<Inquilino> ObtenerTodos() {
             IList<Inquilino> res = new List<Inquilino>();
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {

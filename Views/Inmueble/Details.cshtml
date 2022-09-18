@@ -62,7 +62,7 @@
             @Html.DisplayNameFor(model => model.propietarioId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.propietarioId)
+            @(ViewBag.Propietario.apellido + ", " + ViewBag.Propietario.nombre)
         </dd>
     </dl>
 </div>

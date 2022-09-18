@@ -1,0 +1,47 @@
+@model IEnumerable<inmobiliaria_Heredia.Models.Pago>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.numPago)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fechaPago)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.importe)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.numPago)
+            </td>
+            <td>
+                @(item.fechaPago.ToString("dd/MM/yyyy"))
+            </td>
+            <td>
+                @("$ " + item.importe)
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { id=item.numPago }) |
+                @Html.ActionLink("Detalles", "Details", new { id=item.numPago }) |
+                @Html.ActionLink("Borrar", "Delete", new { id=item.numPago })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace inmobiliaria_Heredia.Models {
-    public class RepositorioInmueble : RepositorioBase {
+    public class RepositorioInmueble : RepositorioBase, IRepositorioInmueble {
 
-        public RepositorioInmueble() : base() {
+        public RepositorioInmueble(IConfiguration configuration) : base(configuration) {
 
         }
         
