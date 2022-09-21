@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using inmobiliaria_Heredia.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,12 +20,14 @@ namespace inmobiliaria_Heredia.Controllers {
         }
 
         // GET: Inmueble
+        [Authorize]
         public ActionResult Index() {
             var lista = ri.ObtenerTodos();
             return View(lista);
         }
 
         // GET: Inmueble/Details/5
+        [Authorize]
         public ActionResult Details(int id) {
             var resultado = ri.ObtenerPorId(id);
             ViewBag.Propietario = rp.ObtenerPorId(resultado.propietarioId);
@@ -32,6 +35,7 @@ namespace inmobiliaria_Heredia.Controllers {
         }
 
         // GET: Inmueble/Create
+        [Authorize]
         public ActionResult Create() {
             ViewBag.Propietario = rp.ObtenerTodos();
             ViewBag.Uso = Inmueble.ObtenerUsos();
@@ -42,6 +46,7 @@ namespace inmobiliaria_Heredia.Controllers {
         // POST: Inmueble/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Inmueble i) {
             try {
                 if(!ModelState.IsValid) {
@@ -59,6 +64,7 @@ namespace inmobiliaria_Heredia.Controllers {
         }
 
         // GET: Inmueble/Edit/5
+        [Authorize]
         public ActionResult Edit(int id) {
             var resultado = ri.ObtenerPorId(id);
             ViewBag.Propietario = rp.ObtenerTodos();
@@ -70,6 +76,7 @@ namespace inmobiliaria_Heredia.Controllers {
         // POST: Inmueble/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Inmueble i) {
             try {
                 i.idInmueble = id;
@@ -85,6 +92,7 @@ namespace inmobiliaria_Heredia.Controllers {
         }
 
         // GET: Inmueble/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id) {
             var resultado = ri.ObtenerPorId(id);
             return View(resultado);
@@ -93,6 +101,7 @@ namespace inmobiliaria_Heredia.Controllers {
         // POST: Inmueble/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Inmueble i) {
             try {
                 ri.Baja(id);

@@ -4,7 +4,7 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Detalles</h1>
 
 <div>
     <h4>Pago</h4>
@@ -34,9 +34,19 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.contratoId)
         </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.detalle)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.detalle)
+        </dd>
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.numPago }) |
+    @if(User.IsInRole("Administrador")) {
+        <a asp-action="Index">Volver</a>
+    } else {
+        <a asp-action="Index" asp-controller="Contrato">Volver</a>
+    }
 </div>

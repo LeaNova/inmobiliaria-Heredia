@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using inmobiliaria_Heredia.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,18 +17,21 @@ namespace inmobiliaria_Heredia.Controllers {
         }
 
         // GET: Inquilino
+        [Authorize]
         public ActionResult Index() {
             var lista = ri.ObtenerTodos();
             return View(lista);
         }
 
         // GET: Inquilino/Details/5
+        [Authorize]
         public ActionResult Details(int id) {
             var resultado = ri.ObtenerPorId(id);
             return View(resultado);
         }
 
         // GET: Inquilino/Create
+        [Authorize]
         public ActionResult Create() {
             return View();
         }
@@ -35,6 +39,7 @@ namespace inmobiliaria_Heredia.Controllers {
         // POST: Inquilino/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Inquilino i) {
             try {
                 if(ModelState.IsValid) {
@@ -49,6 +54,7 @@ namespace inmobiliaria_Heredia.Controllers {
         }
 
         // GET: Inquilino/Edit/5
+        [Authorize]
         public ActionResult Edit(int id) {
             var resultado = ri.ObtenerPorId(id);
             return View(resultado);
@@ -57,6 +63,7 @@ namespace inmobiliaria_Heredia.Controllers {
         // POST: Inquilino/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Inquilino i) {
             try {
                 i.idInquilino = id;
@@ -69,6 +76,7 @@ namespace inmobiliaria_Heredia.Controllers {
         }
 
         // GET: Inquilino/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id) {
             var resultado = ri.ObtenerPorId(id);
             return View(resultado);
@@ -77,6 +85,7 @@ namespace inmobiliaria_Heredia.Controllers {
         // POST: Inquilino/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Inquilino i) {
             try {
                 ri.Baja(id);

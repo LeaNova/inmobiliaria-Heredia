@@ -17,8 +17,8 @@ namespace inmobiliaria_Heredia.Models {
             int res = -1;
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
                 string sql = @"
-                    INSERT INTO Pago (fechaPago, importe, contratoId)
-                    VALUES (@fechaPago, @importe);
+                    INSERT INTO Pago (fechaPago, importe, contratoId, detalle)
+                    VALUES (@fechaPago, @importe, @detalle);
                     SELECT LAST_INSERT_ID();";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
 
@@ -26,6 +26,7 @@ namespace inmobiliaria_Heredia.Models {
                     command.Parameters.AddWithValue("@fechaPago", p.fechaPago);
                     command.Parameters.AddWithValue("@importe", p.importe);
                     command.Parameters.AddWithValue("@contratoId", p.contratoId);
+                    command.Parameters.AddWithValue("@detalle", p.detalle);
 
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
@@ -59,7 +60,7 @@ namespace inmobiliaria_Heredia.Models {
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
                 string sql = @"
                     UPDATE Pago
-                    SET fechaPago = @fechaPago, importe = @importe, contratoId = @contratoId
+                    SET fechaPago = @fechaPago, importe = @importe, contratoId = @contratoId, detalle = @detalle
                     WHERE numPago = @id";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
 
@@ -67,6 +68,7 @@ namespace inmobiliaria_Heredia.Models {
                     command.Parameters.AddWithValue("@fechaPago", p.fechaPago);
                     command.Parameters.AddWithValue("@importe", p.importe);
                     command.Parameters.AddWithValue("@contratoId", p.contratoId);
+                    command.Parameters.AddWithValue("@detalle", p.detalle);
                     command.Parameters.AddWithValue("@id", p.numPago);
 
                     connection.Open();
@@ -81,7 +83,7 @@ namespace inmobiliaria_Heredia.Models {
             IList<Pago> res = new List<Pago>();
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
                 string sql = @"
-                    SELECT numPago, fechaPago, importe, c.idContrato
+                    SELECT numPago, fechaPago, importe, c.idContrato, detalle
                     FROM Pago p
                     INNER JOIN Contrato c ON p.contratoId = c.idContrato";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
@@ -96,6 +98,7 @@ namespace inmobiliaria_Heredia.Models {
                             fechaPago = reader.GetDateTime(1),
                             importe = reader.GetDouble(2),
                             contratoId = reader.GetInt32(3),
+                            detalle = reader.GetString(4),
                             contrato = new Contrato {
                                 idContrato = reader.GetInt32(3)
                             }
@@ -112,7 +115,7 @@ namespace inmobiliaria_Heredia.Models {
             IList<Pago> res = new List<Pago>();
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
                 string sql = @"
-                    SELECT numPago, fechaPago, importe, c.idContrato
+                    SELECT numPago, fechaPago, importe, c.idContrato, detalle
                     FROM Pago p
                     INNER JOIN Contrato c ON p.contratoId = c.idContrato
                     WHERE c.idContrato = @id";
@@ -128,6 +131,7 @@ namespace inmobiliaria_Heredia.Models {
                             fechaPago = reader.GetDateTime(1),
                             importe = reader.GetDouble(2),
                             contratoId = reader.GetInt32(3),
+                            detalle = reader.GetString(4),
                             contrato = new Contrato {
                                 idContrato = reader.GetInt32(3)
                             }
@@ -144,7 +148,7 @@ namespace inmobiliaria_Heredia.Models {
             Pago p = null;
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
                 string sql = @"
-                    SELECT numPago, fechaPago, importe, c.idContrato
+                    SELECT numPago, fechaPago, importe, c.idContrato, detalle
                     FROM Pago p
                     INNER JOIN Contrato c ON p.contratoId = c.idContrato
                     WHERE numPago = @id";
@@ -160,6 +164,7 @@ namespace inmobiliaria_Heredia.Models {
                             fechaPago = reader.GetDateTime(1),
                             importe = reader.GetDouble(2),
                             contratoId = reader.GetInt32(3),
+                            detalle = reader.GetString(4),
                             contrato = new Contrato {
                                 idContrato = reader.GetInt32(3)
                             }

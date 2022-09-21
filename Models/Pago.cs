@@ -17,6 +17,9 @@ public class Pago {
     [Display(Name = "Contrato")]
     public int contratoId { get; set; }
 
+    [Display(Name = "Detalle")]
+    public string detalle { get; set; }
+
     [ForeignKey(nameof(contratoId))]
     public Contrato contrato { get; set; }
 }

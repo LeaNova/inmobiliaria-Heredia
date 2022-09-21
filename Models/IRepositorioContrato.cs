@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 namespace inmobiliaria_Heredia.Models {
 
 	public interface IRepositorioContrato : IRepositorio<Contrato> {
-
+        
     }
 }

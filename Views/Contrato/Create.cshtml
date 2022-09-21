@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Crear</h1>
+<h1>Nuevo</h1>
 
 <h4>Contrato</h4>
 <hr />
@@ -32,7 +32,10 @@
                 <select asp-for="inmuebleId" class="form-control">
                     @foreach (var item in (IList<Inmueble>)ViewBag.Inmueble)
                     {
-                        <option value="@item.idInmueble">@(item.direccion)</option>
+                        @if(item.disponible)
+                        {
+                            <option value="@item.idInmueble">@(item.direccion)</option>
+                        }
                     }
                 </select>
                 <span asp-validation-for="inmuebleId" class="text-danger"></span>

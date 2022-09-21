@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - inmobiliaria Heredia</title>
+    <script src="https://kit.fontawesome.com/d188bd0be3.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/inmobiliaria_Heredia.styles.css" asp-append-version="true" />
@@ -25,28 +26,42 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Propietario" asp-action="Index">Propietario</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Inquilino" asp-action="Index">Inquilino</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Inmueble" asp-action="Index">Inmueble</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Contrato" asp-action="Index">Contrato</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="Index">Pago</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Usuario</a>
-                        </li>
+                        @if(User.Identity.IsAuthenticated) {
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Propietario" asp-action="Index"><i class="fa-solid fa-user"></i>Propietarios</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Inmueble" asp-action="Index"><i class="fa-solid fa-building"></i>Inmuebles</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Contrato" asp-action="Index"><i class="fa-solid fa-file-pen"></i>Contratos</a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Logout">Salir</a>
-                        </li>
+                            @if(User.IsInRole("Administrador")) {
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Inquilino" asp-action="Index"><i class="fa-solid fa-users"></i>Inquilinos</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="Index"><i class="fa-solid fa-receipt"></i>Pagos</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index"><i class="fa-solid fa-circle-user"></i>Usuarios</a>
+                                </li>
+                            }
+
+                            <div class="dropdown">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="lnr lnr-user"></span> @User.Identity.Name
+                                </a>
+
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item text-dark" asp-controller="Usuario" asp-action="Perfil"><i class="fa-solid fa-user"></i>Perfil</a></li>
+                                    <li><a class="dropdown-item text-dark" asp-controller="Usuario" asp-action="Logout"><i class="fa-solid fa-right-from-bracket"></i>Salir</a></li>
+                                </ul>
+                            </div>
+                        }
                     </ul>
                 </div>
             </div>

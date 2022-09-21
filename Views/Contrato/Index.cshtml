@@ -36,30 +36,46 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
+            <td rowspan="2">
                 @Html.DisplayFor(modelItem => item.idContrato)
             </td>
-            <td>
+            <td rowspan="2">
                 @(item.fechaInicio.ToString("dd/MM/yyyy"))
             </td>
-            <td>
+            <td rowspan="2">
                 @(item.fechaFinal.ToString("dd/MM/yyyy"))
             </td>
-            <td>
+            <td rowspan="2">
                 @("$ " + item.alquilerMensual)
             </td>
-            <td>
+            <td rowspan="2">
                 @(item.propiedad.direccion)
             </td>
-            <td>
+            <td rowspan="2">
                 @(item.inquilino.apellido + ", " + item.inquilino.nombre)
             </td>
             <td>
-                @Html.ActionLink("Editar", "Edit", new { id=item.idContrato }) |
-                @Html.ActionLink("Detalles", "Details", new { id=item.idContrato }) |
-                @Html.ActionLink("Borrar", "Delete", new { id=item.idContrato }) |
-                @Html.ActionLink("Pagos", "Index", "Pago", new { id=item.idContrato}) |
-                @Html.ActionLink("Pagar", "Create", "Pago", new { id=item.idContrato})
+                <!--
+                1@Html.ActionLink("Editar", "Edit", new { id=item.idContrato }) |
+                1@Html.ActionLink("Detalles", "Details", new { id=item.idContrato }) |
+                1@Html.ActionLink("Pagos", "Index", "Pago", new { id=item.idContrato}) |
+                1@Html.ActionLink("Pagar", "Create", "Pago", new { id=item.idContrato}) |
+                1@Html.ActionLink("Borrar", "Delete", new { id=item.idContrato })
+                -->
+                <a asp-action="Edit" asp-route-id="@item.idContrato" title="Editar"><i class="fa-solid fa-pen-to-square fa-xl"></i></a> |
+                <a asp-action="Details" asp-route-id="@item.idContrato" title="Detalles"><i class="fa-solid fa-circle-info fa-xl"></i></a> |
+                <a asp-action="Index" asp-controller="Pago" asp-route-id="@item.idContrato" title="Pagos"><i class="fa-solid fa-receipt fa-xl"></i></a> |
+                <a asp-action="Create" asp-controller="Pago" asp-route-id="@item.idContrato" title="Pagar"><i class="fa-solid fa-circle-dollar-to-slot fa-xl"></i></a> |
+
+                @if(User.IsInRole("Administrador")) {
+                    <a asp-action="Delete" asp-route-id="@item.idContrato" title="Borrar"><i class="fa-solid fa-trash-can fa-xl"></i></a>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.ActionLink("Terminar", "Terminate", new { id=item.idContrato }) |
+                @Html.ActionLink("Renobar", "Create", new { id=item.idContrato })
             </td>
         </tr>
 }

@@ -11,14 +11,13 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         {
             options.LoginPath = "/Usuario/Login";
             options.LogoutPath = "/Usuario/Logout";
-            options.AccessDeniedPath = "/Home/Restringido";
+            options.AccessDeniedPath = "/Home";
             options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
         });
 
 builder.Services.AddAuthorization(options => {
     //options.AddPolicy("Administrador", policy => policy.RequireClaim(ClaimTypes.Role, "Administrador"));
     options.AddPolicy("Administrador", policy => policy.RequireRole("Administrador"));
-    options.AddPolicy("Usuario", policy => policy.RequireRole("Usuario"));
 });
 
 builder.Services.AddTransient<IRepositorio<Propietario>, RepositorioPropietario>();
@@ -54,8 +53,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

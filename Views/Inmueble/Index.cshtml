@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Índice Inmuebles</h1>
+<h1>Índice de Inmuebles</h1>
 
 <p>
     <a asp-action="Create">Nuevo Inmueble</a>
@@ -73,9 +73,12 @@
                 @(item.duenio.apellido + ", " + item.duenio.nombre)
             </td>
             <td>
-                @Html.ActionLink("Editar", "Edit", new { id=item.idInmueble }) |
-                @Html.ActionLink("Detalles", "Details", new { id=item.idInmueble }) |
-                @Html.ActionLink("Borrar", "Delete", new { id=item.idInmueble })
+                <a asp-action="Edit" asp-route-id="@item.idInmueble" title="Editar"><i class="fa-solid fa-pen-to-square fa-xl"></i></a> |
+                <a asp-action="Details" asp-route-id="@item.idInmueble" title="Detalles"><i class="fa-solid fa-circle-info fa-xl"></i></a> |
+
+                @if(User.IsInRole("Administrador")) {
+                    <a asp-action="Delete" asp-route-id="@item.idInmueble" title="Borrar"><i class="fa-solid fa-trash-can fa-xl"></i></a>
+                }
             </td>
         </tr>
 }

@@ -6,7 +6,7 @@ namespace inmobiliaria_Heredia.Models;
 public class Usuario {
     public enum enAccess {
         Administrador = 1,
-        Usuario = 2
+        Empleado = 2
     }
 
     [Display(Name = "Índice")]
@@ -25,7 +25,7 @@ public class Usuario {
     public string pass { get; set; }
     
     [Display(Name = "Avatar")]
-    public string? avatar { get; set; }
+    public string avatar { get; set; }
 
     [Display(Name = "Avatar"), NotMapped]
     public IFormFile avatarFile { get; set; }

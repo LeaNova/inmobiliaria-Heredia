@@ -4,10 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Índice de pagos</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Nuevo pago</a>
 </p>
 <table class="table">
     <thead>
@@ -20,6 +20,12 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.importe)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.contratoId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.detalle)
             </th>
             <th></th>
         </tr>
@@ -37,9 +43,18 @@
                 @("$ " + item.importe)
             </td>
             <td>
-                @Html.ActionLink("Editar", "Edit", new { id=item.numPago }) |
-                @Html.ActionLink("Detalles", "Details", new { id=item.numPago }) |
-                @Html.ActionLink("Borrar", "Delete", new { id=item.numPago })
+                @Html.DisplayFor(modelItem => item.contratoId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.detalle)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.numPago" title="Editar"><i class="fa-solid fa-pen-to-square fa-xl"></i></a> |
+                <a asp-action="Details" asp-route-id="@item.numPago" title="Detalles"><i class="fa-solid fa-circle-info fa-xl"></i></a> |
+
+                @if(User.IsInRole("Administrador")) {
+                    <a asp-action="Delete" asp-route-id="@item.numPago" title="Borrar"><i class="fa-solid fa-trash-can fa-xl"></i></a>
+                }
             </td>
         </tr>
 }

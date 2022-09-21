@@ -21,19 +21,23 @@ namespace inmobiliaria_Heredia.Controllers {
         }
 
         // GET: Contrato
-        [Authorize(Policy = "Usuario")]
+        [Authorize]
         public ActionResult Index() {
             var lista = rc.ObtenerTodos();
             return View(lista);
         }
 
         // GET: Contrato/Details/5
+        [Authorize]
         public ActionResult Details(int id) {
             var resultado = rc.ObtenerPorId(id);
+            ViewBag.Inmueble = rInm.ObtenerPorId(id);
+            ViewBag.Inquilino = rInq.ObtenerPorId(id);
             return View(resultado);
         }
 
         // GET: Contrato/Create
+        [Authorize]
         public ActionResult Create() {
             ViewBag.Inmueble = rInm.ObtenerTodos();
             ViewBag.Inquilino = rInq.ObtenerTodos();
@@ -43,6 +47,7 @@ namespace inmobiliaria_Heredia.Controllers {
         // POST: Contrato/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Contrato c) {
             try {
                 if(!ModelState.IsValid) {
@@ -65,6 +70,7 @@ namespace inmobiliaria_Heredia.Controllers {
         }
 
         // GET: Contrato/Edit/5
+        [Authorize]
         public ActionResult Edit(int id) {
             var resultado = rc.ObtenerPorId(id);
             ViewBag.Inmueble = rInm.ObtenerTodos();
@@ -75,6 +81,7 @@ namespace inmobiliaria_Heredia.Controllers {
         // POST: Contrato/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Contrato c) {
             try {
                 c.idContrato = id;
@@ -89,6 +96,7 @@ namespace inmobiliaria_Heredia.Controllers {
         }
 
         // GET: Contrato/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id) {
             var resultado = rc.ObtenerPorId(id);
             return View(resultado);
@@ -97,6 +105,7 @@ namespace inmobiliaria_Heredia.Controllers {
         // POST: Contrato/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Contrato c) {
             try {
                 rc.Baja(id);
@@ -104,6 +113,17 @@ namespace inmobiliaria_Heredia.Controllers {
             } catch (Exception ex) {
                 throw;
             }
+        }
+
+        // GET: Contrato/Terminate/5
+        [Authorize]
+        public ActionResult Terminate(int id) {
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Contrato/Terminate/5
+        public ActionResult Terminate(int id, Contrato c) {
+            return RedirectToAction(nameof(Index));
         }
     }
 }

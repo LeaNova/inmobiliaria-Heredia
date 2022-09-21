@@ -32,19 +32,19 @@
             @Html.DisplayNameFor(model => model.alquilerMensual)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.alquilerMensual)
+            @("$ " + Model.alquilerMensual)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.inmuebleId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.inmuebleId)
+            @(ViewBag.Inmueble.direccion)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.inquilinoId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.inquilinoId)
+            @(ViewBag.Inquilino.apellido + ", " + ViewBag.Inquilino.nombre)
         </dd>
     </dl>
 </div>

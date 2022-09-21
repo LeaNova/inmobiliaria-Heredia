@@ -35,7 +35,8 @@ namespace inmueble_Heredia.Controllers {
         // GET: Usuario/Details/5
         [Authorize(Policy = "Administrador")]
         public ActionResult Details(int id) {
-            return View();
+            var resultado = ru.ObtenerPorId(id);
+            return View(resultado);
         }
 
         // GET: Usuario/Create
@@ -89,7 +90,7 @@ namespace inmueble_Heredia.Controllers {
         }
 
         // GET: Usuario/Edit/5
-        [Authorize(Policy = "Administrador")]
+        [Authorize]
         public ActionResult Edit(int id) {
             var resultado = ru.ObtenerPorId(id);
             ViewBag.Access = Usuario.ObtenerAccess();
@@ -174,7 +175,7 @@ namespace inmueble_Heredia.Controllers {
 
         // GET: Usuarios/Login/
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl) {
+        public ActionResult Login() {
             return View();
         }
 
@@ -223,6 +224,12 @@ namespace inmueble_Heredia.Controllers {
             await HttpContext.SignOutAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        public ActionResult Perfil() {
+            var resultado = ru.ObtenerPorMail(User.Identity.Name);
+            return View("Details", resultado);
         }
     }
 }

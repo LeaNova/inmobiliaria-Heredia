@@ -18,5 +18,6 @@ public class Inquilino {
     [Display(Name = "Teléfono")]
     public String telefono { get; set; }
 
+    [EmailAddress]
     public String Email { get; set; }
 }

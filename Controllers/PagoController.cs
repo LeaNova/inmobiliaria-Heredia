@@ -20,36 +20,42 @@ namespace inmueble_Heredia.Controllers {
         }
 
         // GET: Pago
-        [AllowAnonymous]
+        [Authorize]
         public ActionResult Index(int id) {
-            if(id == 0) {
-                var lista = rp.ObtenerTodos();
-                return View(lista);
-            } else {
-                var lista = rp.ObtenerPorContrato(id);
-                return View(lista);
+            if(id > 0) {
+                var resultado = rp.ObtenerPorContrato(id);
+                ViewBag.Contrato = rc.ObtenerPorId(id);
+                return View(resultado);
             }
+            var lista = rp.ObtenerTodos();
+            return View(lista);
         }
 
         // GET: Pago/Details/5
+        [Authorize]
         public ActionResult Details(int id) {
             var resultado = rp.ObtenerPorId(id);
             return View(resultado);
         }
 
         // GET: Pago/Create
+        [Authorize]
         public ActionResult Create(int id) {
-            Contrato c = rc.ObtenerPorId(id);
-            Pago p = new Pago();
-            p.fechaPago = DateTime.Now;
-            p.importe = c.alquilerMensual;
-            p.contratoId = c.idContrato;
-            return View(p);
+            if(id > 0) {
+                Contrato c = rc.ObtenerPorId(id);
+                Pago p = new Pago();
+                p.fechaPago = DateTime.Now;
+                p.importe = c.alquilerMensual;
+                p.contratoId = c.idContrato;
+                return View(p);
+            }
+            return View();
         }
 
         // POST: Pago/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Pago p) {
             try {
                 if(!ModelState.IsValid) {
@@ -64,6 +70,7 @@ namespace inmueble_Heredia.Controllers {
         }
 
         // GET: Pago/Edit/5
+        [Authorize]
         public ActionResult Edit(int id) {
             var resultado = rp.ObtenerPorId(id);
             return View(resultado);
@@ -72,6 +79,7 @@ namespace inmueble_Heredia.Controllers {
         // POST: Pago/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Pago p) {
             try {
                 p.numPago = id;
@@ -84,6 +92,7 @@ namespace inmueble_Heredia.Controllers {
         }
 
         // GET: Pago/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id) {
             var resultado = rp.ObtenerPorId(id);
             return View();
@@ -92,6 +101,7 @@ namespace inmueble_Heredia.Controllers {
         // POST: Pago/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, IFormCollection collection) {
             try {
                 rp.Baja(id);
