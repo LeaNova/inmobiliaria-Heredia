@@ -114,16 +114,23 @@ namespace inmobiliaria_Heredia.Controllers {
                 throw;
             }
         }
-
+/*
         // GET: Contrato/Terminate/5
         [Authorize]
         public ActionResult Terminate(int id) {
-            return RedirectToAction(nameof(Index));
+            var contrato = rc.ObtenerPorId(id);
+            contrato.fechaFinal = DateTime.Now;
+            contrato.idContrato = id;
+            rc.Modificar(contrato);
+
+
+
+            return View("Pago/Create");
         }
 
         // POST: Contrato/Terminate/5
         public ActionResult Terminate(int id, Contrato c) {
             return RedirectToAction(nameof(Index));
-        }
+        }*/
     }
 }

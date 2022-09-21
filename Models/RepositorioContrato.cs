@@ -17,8 +17,8 @@ namespace inmobiliaria_Heredia.Models {
             int res = -1;
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
                 string sql = @"
-                    INSERT INTO Contrato (fechaInicio, fechaFinal, alquilerMensual, inmuebleId, inquilinoId, pagoId)
-                    VALUES (@fechaInicio, @fechaFinal, @alquilerMensual @inmuebleId, @inmuebleId, @pagoId);
+                    INSERT INTO Contrato (fechaInicio, fechaFinal, alquilerMensual, inmuebleId, inquilinoId)
+                    VALUES (@fechaInicio, @fechaFinal, @alquilerMensual @inmuebleId, @inmuebleId);
                     SELECT LAST_INSERT_ID();";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
 
@@ -61,7 +61,7 @@ namespace inmobiliaria_Heredia.Models {
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
                 string sql = @"
                     UPDATE Contrato
-                    SET fechaInicio = @fechaInicio, fechaFinal = @fechaFinal, alquilerMensual = @alquilerMensual, inmuebleId = @inmuebleId, inquilinoId = @inquilinoId, pagoId = @pagoId
+                    SET fechaInicio = @fechaInicio, fechaFinal = @fechaFinal, alquilerMensual = @alquilerMensual, inmuebleId = @inmuebleId, inquilinoId = @inquilinoId
                     WHERE idContrato = @id";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
 
