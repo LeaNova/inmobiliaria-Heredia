@@ -40,17 +40,23 @@
             </div>
         </form>
     </div>
+    
     <div class="col-md-4">
         <h2>Contraseña</h2>
-        <form asp-action="Edit">
+        <form asp-action="EditPass" asp-route-id="@ViewBag.id">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="user" class="control-label"></label>
-                <input asp-for="user" class="form-control" disabled />
-                <span asp-validation-for="user" class="text-danger"></span>
+                <label name="passOld" class="control-label">Contraseña</label>
+                <input type="password" name="passOld" class="form-control" />
+                <span name="passOld" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="pass" class="control-label"></label>
+                <label name="passNew" class="control-label">Nueva contraseña</label>
+                <input type="password" name="passNew" class="form-control" />
+                <span name="passNew" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="pass" class="control-label">Nueva contraseña</label>
                 <input asp-for="pass" class="form-control" />
                 <span asp-validation-for="pass" class="text-danger"></span>
             </div>
@@ -59,9 +65,10 @@
             </div>
         </form>
     </div>
+
     <div class="col-md-4">
         <h2>Cambiar avatar</h2>
-        <form asp-action="Edit" enctype="multipart/form-data">
+        <form asp-action="EditAvatar" enctype="multipart/form-data" asp-route-id="@ViewBag.id">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="avatarFile" class="control-label"></label>

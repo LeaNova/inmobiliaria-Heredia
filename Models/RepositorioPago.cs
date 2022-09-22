@@ -18,7 +18,7 @@ namespace inmobiliaria_Heredia.Models {
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
                 string sql = @"
                     INSERT INTO Pago (fechaPago, importe, contratoId, detalle)
-                    VALUES (@fechaPago, @importe, @detalle);
+                    VALUES (@fechaPago, @importe, @contratoId, @detalle);
                     SELECT LAST_INSERT_ID();";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
 

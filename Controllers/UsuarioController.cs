@@ -92,6 +92,7 @@ namespace inmueble_Heredia.Controllers {
         // GET: Usuario/Edit/5
         [Authorize]
         public ActionResult Edit(int id) {
+            ViewBag.id = id;
             var resultado = ru.ObtenerPorId(id);
             ViewBag.Access = Usuario.ObtenerAccess();
             return View(resultado);
@@ -104,31 +105,59 @@ namespace inmueble_Heredia.Controllers {
         public ActionResult Edit(int id, Usuario u) {
             try {
                 Usuario original = ru.ObtenerPorId(id);
-                if(u.nombre != null && u.apellido != null) {
-                    u.user = original.user;
-                    u.pass = original.pass;
-                    u.avatar = original.avatar;
-                } else if(u.user != null && u.pass != null) {
-                    u.nombre = original.nombre;
-                    u.apellido = original.apellido;
-                    u.avatar = original.avatar;
-                    u.access = original.access;
+                original.nombre = u.nombre;
+                original.apellido = u.apellido;
+                original.access = u.access;
 
-                    string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                        password: u.pass,
+                ru.Modificar(original);
+
+                return RedirectToAction(nameof(Index));
+            } catch (Exception ex) {
+                throw;
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public ActionResult EditPass(int id, PassModel p) {
+            try {
+                Usuario original = ru.ObtenerPorId(id);
+                    var passOld = p.passOld;
+                    var passNew = p.passNew;
+                    string hashedOld = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                        password: passOld,
                         salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
                         prf: KeyDerivationPrf.HMACSHA1,
                         iterationCount: 1000,
                         numBytesRequested: 256 / 8));
-                    u.pass = hashed;
 
-                } else {
-                    u.nombre = original.nombre;
-                    u.apellido = original.apellido;
-                    u.user = original.user;
-                    u.pass = original.pass;
-                    u.access = original.access;
+                    if(original.pass == hashedOld && passNew == p.pass) {
+                        string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                            password: p.pass,
+                            salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                            prf: KeyDerivationPrf.HMACSHA1,
+                            iterationCount: 1000,
+                            numBytesRequested: 256 / 8));
 
+                        original.pass = hashed;
+                    } else {
+                        TempData["Mensaje"] = "La nueva contraseña no coinciden";
+                    }
+                ru.Modificar(original);
+
+                return RedirectToAction(nameof(Index));
+            } catch (Exception ex) {
+                throw;
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public ActionResult EditAvatar(int id, CambiarAvatar c) {
+            try {
+                Usuario original = ru.ObtenerPorId(id);
                     string wwwPath = environment.WebRootPath;
                     string path = Path.Combine(wwwPath, "Uploads");
 
@@ -136,28 +165,32 @@ namespace inmueble_Heredia.Controllers {
                         Directory.CreateDirectory(path);
                     }
 
-                    string fileName = "avatar_" + u.idUsuario + Path.GetExtension(u.avatarFile.FileName);
+                    string fileName = "avatar_" + id + Path.GetExtension(c.avatarFile.FileName);
                     string pathCompleto = Path.Combine(path, fileName);
-                    u.avatar = Path.Combine("/Uploads", fileName);
+
+                    if(System.IO.File.Exists(Path.Combine(environment.WebRootPath, "Uploads", "avatar_" + id + Path.GetExtension(original.avatar)))) {
+						System.IO.File.Delete(Path.Combine(environment.WebRootPath, "Uploads", "avatar_" + id + Path.GetExtension(original.avatar)));
+                    }
+
+                    original.avatar = Path.Combine("/Uploads", fileName);
                     
                     using (FileStream stream = new FileStream(pathCompleto, FileMode.Create)) {
-                        u.avatarFile.CopyTo(stream);
+                        c.avatarFile.CopyTo(stream);
                     }
-                }
-                u.idUsuario = id;
-                ru.Modificar(u);
+                
+                ru.Modificar(original);
 
                 return RedirectToAction(nameof(Index));
             } catch (Exception ex) {
-                ViewBag.Access = Usuario.ObtenerAccess();
-                return View(u);
+                throw;
             }
         }
 
         // GET: Usuario/Delete/5
         [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id) {
-            return View();
+            var resultado = ru.ObtenerPorId(id);
+            return View(resultado);
         }
 
         // POST: Usuario/Delete/5
@@ -166,10 +199,10 @@ namespace inmueble_Heredia.Controllers {
         [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, IFormCollection collection) {
             try {
-
+                ru.Baja(id);
                 return RedirectToAction(nameof(Index));
             } catch {
-                return View();
+                throw;
             }
         }
 

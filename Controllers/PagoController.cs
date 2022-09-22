@@ -41,15 +41,13 @@ namespace inmueble_Heredia.Controllers {
         // GET: Pago/Create
         [Authorize]
         public ActionResult Create(int id) {
-            if(id > 0) {
-                Contrato c = rc.ObtenerPorId(id);
-                Pago p = new Pago();
-                p.fechaPago = DateTime.Now;
-                p.importe = c.alquilerMensual;
-                p.contratoId = c.idContrato;
-                return View(p);
-            }
-            return View();
+            Contrato c = rc.ObtenerPorId(id);
+            Pago p = new Pago();
+            p.fechaPago = DateTime.Now;
+            p.importe = c.alquilerMensual;
+            p.contratoId = c.idContrato;
+            ViewBag.contrato = rc.ObtenerTodos();
+            return View(p);
         }
 
         // POST: Pago/Create
@@ -109,6 +107,34 @@ namespace inmueble_Heredia.Controllers {
             } catch (Exception ex) {
                 throw;
             }
+        }
+
+        // POST: Contrato/Terminate/5
+        [Authorize]
+        public ActionResult Terminate(int id) {
+            Contrato terminado = rc.ObtenerPorId(id);
+
+            //Calculo de dias
+            var minimoDias = (terminado.fechaFinal - terminado.fechaInicio)/2;
+            var diasTranscurridos = DateTime.Now - terminado.fechaInicio;
+
+            terminado.fechaFinal = DateTime.Now;
+            rc.Modificar(terminado);
+
+            Pago p = new Pago();
+            p.fechaPago = DateTime.Now;
+            p.importe = terminado.alquilerMensual;
+            p.contratoId = terminado.idContrato;
+            p.detalle = "Multa: importe de 1 (uno) meses de alquiler";
+
+            if(diasTranscurridos < minimoDias) {
+                p.importe *= 2;
+                p.detalle = "Multa: importe de 2 (dos) meses de alquiler";
+            }
+
+            ViewBag.contrato = rc.ObtenerTodos();
+
+            return View("Create", p);
         }
     }
 }

@@ -32,20 +32,19 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Propietario" asp-action="Index"><i class="fa-solid fa-user"></i>Propietarios</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Inquilino" asp-action="Index"><i class="fa-solid fa-users"></i>Inquilinos</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Inmueble" asp-action="Index"><i class="fa-solid fa-building"></i>Inmuebles</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Contrato" asp-action="Index"><i class="fa-solid fa-file-pen"></i>Contratos</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="Index"><i class="fa-solid fa-receipt"></i>Pagos</a>
+                            </li>
 
                             @if(User.IsInRole("Administrador")) {
-
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Inquilino" asp-action="Index"><i class="fa-solid fa-users"></i>Inquilinos</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="Index"><i class="fa-solid fa-receipt"></i>Pagos</a>
-                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index"><i class="fa-solid fa-circle-user"></i>Usuarios</a>
                                 </li>

@@ -34,18 +34,18 @@
                     {
                         @if(item.disponible)
                         {
-                            <option value="@item.idInmueble">@(item.direccion)</option>
+                            @:<option @(item.idInmueble == Model.inmuebleId ? "selected" : "") value="@item.idInmueble">@(item.direccion)</option>
                         }
-                    }
+                    } 
                 </select>
                 <span asp-validation-for="inmuebleId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">Inquilino</label>
-                <select asp-for="inquilinoId" class="form-control">
+                <select asp-for="inquilinoId" class="form-control" >
                     @foreach (var item in (IList<Inquilino>)ViewBag.Inquilino)
                     {
-                        <option value="@item.idInquilino">@(item.apellido + ", " + item.nombre)</option>
+                        @:<option @(item.idInquilino == Model.inquilinoId ? "selected" : "") value="@item.idInquilino">@(item.apellido + ", " + item.nombre)</option>
                     }
                 </select>
                 <span asp-validation-for="inquilinoId" class="text-danger"></span>

@@ -38,10 +38,22 @@ namespace inmobiliaria_Heredia.Controllers {
 
         // GET: Contrato/Create
         [Authorize]
-        public ActionResult Create() {
+        public ActionResult Create(int id) {
+            if(id > 0) {
+                var resultado = rc.ObtenerPorId(id);
+                resultado.fechaInicio = DateTime.Now;
+                resultado.fechaFinal = DateTime.Now;
+                ViewBag.Inmueble = rInm.ObtenerTodos();
+                ViewBag.Inquilino = rInq.ObtenerTodos();
+                return View(resultado);
+            }
+            Contrato c = new Contrato();
+            c.idContrato = 0;
+            c.fechaInicio = DateTime.Now;
+            c.fechaFinal = DateTime.Now;
             ViewBag.Inmueble = rInm.ObtenerTodos();
             ViewBag.Inquilino = rInq.ObtenerTodos();
-            return View();
+            return View(c);
         }
 
         // POST: Contrato/Create
@@ -114,23 +126,5 @@ namespace inmobiliaria_Heredia.Controllers {
                 throw;
             }
         }
-/*
-        // GET: Contrato/Terminate/5
-        [Authorize]
-        public ActionResult Terminate(int id) {
-            var contrato = rc.ObtenerPorId(id);
-            contrato.fechaFinal = DateTime.Now;
-            contrato.idContrato = id;
-            rc.Modificar(contrato);
-
-
-
-            return View("Pago/Create");
-        }
-
-        // POST: Contrato/Terminate/5
-        public ActionResult Terminate(int id, Contrato c) {
-            return RedirectToAction(nameof(Index));
-        }*/
     }
 }
