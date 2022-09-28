@@ -7,8 +7,10 @@
 <h1>Índice de Contratos</h1>
 
 <p>
-    <a asp-action="Create">Nuevo Contrato</a>
+    <a asp-action="Create" class="btn btn-primary">Nuevo Contrato</a>
+    <a asp-action="Search" class="btn btn-primary">Busquedas</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
@@ -55,13 +57,6 @@
                 @(item.inquilino.apellido + ", " + item.inquilino.nombre)
             </td>
             <td>
-                <!--
-                1@Html.ActionLink("Editar", "Edit", new { id=item.idContrato }) |
-                1@Html.ActionLink("Detalles", "Details", new { id=item.idContrato }) |
-                1@Html.ActionLink("Pagos", "Index", "Pago", new { id=item.idContrato}) |
-                1@Html.ActionLink("Pagar", "Create", "Pago", new { id=item.idContrato}) |
-                1@Html.ActionLink("Borrar", "Delete", new { id=item.idContrato })
-                -->
                 <a asp-action="Edit" asp-route-id="@item.idContrato" title="Editar"><i class="fa-solid fa-pen-to-square fa-xl"></i></a> |
                 <a asp-action="Details" asp-route-id="@item.idContrato" title="Detalles"><i class="fa-solid fa-circle-info fa-xl"></i></a> |
                 <a asp-action="Index" asp-controller="Pago" asp-route-id="@item.idContrato" title="Pagos"><i class="fa-solid fa-receipt fa-xl"></i></a> |
@@ -74,8 +69,8 @@
         </tr>
         <tr>
             <td>
-                @Html.ActionLink("Terminar contrato", "Terminate", "Pago", new { id=item.idContrato }) |
-                @Html.ActionLink("Renobar", "Create", new { id=item.idContrato })
+                <a asp-action="Create" asp-route-id="@item.idContrato" class="btn btn-primary">Renobar</a>
+                <a asp-action="Terminate" asp-route-id="@item.idContrato" class="btn btn-primary">Terminar contrato</a>
             </td>
         </tr>
 }

@@ -50,7 +50,7 @@
             @Html.DisplayNameFor(model => model.precio)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.precio)
+            @("$ " + Model.precio)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.disponible)
@@ -67,6 +67,6 @@
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Editar", "Edit", new { id = Model.idInmueble }) |
-    <a asp-action="Index">Volver</a>
+    <a asp-action="Edit" asp-route-id="@Model.idInmueble" class="btn btn-primary">Editar</a>
+    <a asp-action="Index" class="btn btn-secondary">Volver</a>
 </div>

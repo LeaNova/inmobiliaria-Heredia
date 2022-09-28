@@ -51,24 +51,24 @@
             @Html.DisplayNameFor(model => model.precio)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.precio)
+            @("$ " + Model.precio)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.disponible)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.disponible)
+            @(Model.disponible ? "Si" : "No")
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.propietarioId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.duenio.apellido)
+            @(ViewBag.Propietario.apellido + ", " + ViewBag.Propietario.nombre)
         </dd>
     </dl>
     
     <form asp-action="Delete">
-        <input type="submit" value="Borrar" class="btn btn-danger" /> |
-        <a asp-action="Index">Volver</a>
+        <input type="submit" value="Borrar" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
     </form>
 </div>

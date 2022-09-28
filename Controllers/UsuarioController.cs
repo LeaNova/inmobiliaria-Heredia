@@ -29,12 +29,25 @@ namespace inmueble_Heredia.Controllers {
         [Authorize(Policy = "Administrador")]
         public ActionResult Index() {
             var lista = ru.ObtenerTodos();
+            if(TempData.ContainsKey("Mensaje")) {
+                ViewBag.Mensaje = TempData["Mensaje"];
+            }
+            if(TempData.ContainsKey("Error")) {
+                ViewBag.Error = TempData["Error"];
+            }
             return View(lista);
         }
 
         // GET: Usuario/Details/5
         [Authorize(Policy = "Administrador")]
         public ActionResult Details(int id) {
+            if(TempData.ContainsKey("Mensaje")) {
+                ViewBag.Mensaje = TempData["Mensaje"];
+            }
+            if(TempData.ContainsKey("Error")) {
+                ViewBag.Error = TempData["Error"];
+            }
+
             var resultado = ru.ObtenerPorId(id);
             return View(resultado);
         }
@@ -56,34 +69,45 @@ namespace inmueble_Heredia.Controllers {
                 return View();
             }
             try {
-                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                    password: u.pass,
-                    salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
-                    prf: KeyDerivationPrf.HMACSHA1,
-                    iterationCount: 1000,
-                    numBytesRequested: 256 / 8));
-                u.pass = hashed;
-                int resultado = ru.Alta(u);
+                if(validarDatos(u)) {
+                    string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                        password: u.pass,
+                        salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                        prf: KeyDerivationPrf.HMACSHA1,
+                        iterationCount: 1000,
+                        numBytesRequested: 256 / 8));
+                    u.pass = hashed;
+                    int resultado = ru.Alta(u);
 
-                if(u.avatarFile != null && u.idUsuario > 0) {
-                    string wwwPath = environment.WebRootPath;
-                    string path = Path.Combine(wwwPath, "Uploads");
+                    if(u.avatarFile != null && u.idUsuario > 0) {
+                        string wwwPath = environment.WebRootPath;
+                        string path = Path.Combine(wwwPath, "Uploads");
 
-                    if(!Directory.Exists(path)) {
-                        Directory.CreateDirectory(path);
+                        if(!Directory.Exists(path)) {
+                            Directory.CreateDirectory(path);
+                        }
+
+                        string fileName = "avatar_" + u.idUsuario + Path.GetExtension(u.avatarFile.FileName);
+                        string pathCompleto = Path.Combine(path, fileName);
+                        u.avatar = Path.Combine("/Uploads", fileName);
+                        
+                        using (FileStream stream = new FileStream(pathCompleto, FileMode.Create)) {
+                            u.avatarFile.CopyTo(stream);
+                        }
+
+                        ru.Modificar(u);
                     }
 
-                    string fileName = "avatar_" + u.idUsuario + Path.GetExtension(u.avatarFile.FileName);
-                    string pathCompleto = Path.Combine(path, fileName);
-                    u.avatar = Path.Combine("/Uploads", fileName);
-                    
-                    using (FileStream stream = new FileStream(pathCompleto, FileMode.Create)) {
-                        u.avatarFile.CopyTo(stream);
-                    }
-                    ru.Modificar(u);
+                    TempData["Mensaje"] = "Usuario cargado correctamente";
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
 
+                TempData["Error"] = "Error en entrada de datos";
+                ViewBag.Access = Usuario.ObtenerAccess();
+                if(TempData.ContainsKey("Error")) {
+                    ViewBag.Error = TempData["Error"];
+                }
+                return View(u);
             } catch (Exception ex) {
                 throw;
             }
@@ -93,6 +117,7 @@ namespace inmueble_Heredia.Controllers {
         [Authorize]
         public ActionResult Edit(int id) {
             ViewBag.id = id;
+
             var resultado = ru.ObtenerPorId(id);
             ViewBag.Access = Usuario.ObtenerAccess();
             return View(resultado);
@@ -104,14 +129,30 @@ namespace inmueble_Heredia.Controllers {
         [Authorize]
         public ActionResult Edit(int id, Usuario u) {
             try {
-                Usuario original = ru.ObtenerPorId(id);
-                original.nombre = u.nombre;
-                original.apellido = u.apellido;
-                original.access = u.access;
+                if(validarDatos(u)) {
+                    Usuario original = ru.ObtenerPorId(id);
+                    original.nombre = u.nombre;
+                    original.apellido = u.apellido;
 
-                ru.Modificar(original);
+                    if(User.IsInRole("Administrador")) {
+                        original.access = u.access;
+                    }
 
-                return RedirectToAction(nameof(Index));
+                    ru.Modificar(original);
+                    TempData["Mensaje"] = "Usuario actualizado correctamente";
+
+                    if(User.IsInRole("Empleado")) {
+                        return View("Index", "Propietario");
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+
+                TempData["Error"] = "Error en entrada de datos";
+                ViewBag.Access = Usuario.ObtenerAccess();
+                if(TempData.ContainsKey("Error")) {
+                    ViewBag.Error = TempData["Error"];
+                }
+                return View(u);
             } catch (Exception ex) {
                 throw;
             }
@@ -123,6 +164,7 @@ namespace inmueble_Heredia.Controllers {
         public ActionResult EditPass(int id, PassModel p) {
             try {
                 Usuario original = ru.ObtenerPorId(id);
+                if(ModelState.IsValid) {
                     var passOld = p.passOld;
                     var passNew = p.passNew;
                     string hashedOld = Convert.ToBase64String(KeyDerivation.Pbkdf2(
@@ -132,21 +174,34 @@ namespace inmueble_Heredia.Controllers {
                         iterationCount: 1000,
                         numBytesRequested: 256 / 8));
 
-                    if(original.pass == hashedOld && passNew == p.pass) {
-                        string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                            password: p.pass,
-                            salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
-                            prf: KeyDerivationPrf.HMACSHA1,
-                            iterationCount: 1000,
-                            numBytesRequested: 256 / 8));
+                    if(original.pass == hashedOld) {
+                        if(passNew == p.pass) {
+                            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                                password: p.pass,
+                                salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
+                                prf: KeyDerivationPrf.HMACSHA1,
+                                iterationCount: 1000,
+                                numBytesRequested: 256 / 8));
 
-                        original.pass = hashed;
+                            original.pass = hashed;
+                            TempData["Mensaje"] = "Contraseña actualizada correctamente";
+                            ru.Modificar(original);
+                        } else {
+                            TempData["Error"] = "La nueva contraseña no coinciden";
+                            return View("Edit", original);
+                        }
                     } else {
-                        TempData["Mensaje"] = "La nueva contraseña no coinciden";
+                        TempData["Error"] = "Contraseña incorrecta";
+                        return View("Edit", original);
                     }
-                ru.Modificar(original);
-
-                return RedirectToAction(nameof(Index));
+                    
+                    if(User.IsInRole("Empleado")) {
+                        return View("Index", "Propietario");
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+                ViewBag.Access = Usuario.ObtenerAccess();
+                return View("Edit", original);
             } catch (Exception ex) {
                 throw;
             }
@@ -165,12 +220,11 @@ namespace inmueble_Heredia.Controllers {
                         Directory.CreateDirectory(path);
                     }
 
-                    string fileName = "avatar_" + id + Path.GetExtension(c.avatarFile.FileName);
+                    string fileName = "avatar_" + original.idUsuario + Path.GetExtension(c.avatarFile.FileName);
                     string pathCompleto = Path.Combine(path, fileName);
 
-                    if(System.IO.File.Exists(Path.Combine(environment.WebRootPath, "Uploads", "avatar_" + id + Path.GetExtension(original.avatar)))) {
+                    if(System.IO.File.Exists(Path.Combine(environment.WebRootPath, "Uploads", "avatar_" + id + Path.GetExtension(original.avatar))))
 						System.IO.File.Delete(Path.Combine(environment.WebRootPath, "Uploads", "avatar_" + id + Path.GetExtension(original.avatar)));
-                    }
 
                     original.avatar = Path.Combine("/Uploads", fileName);
                     
@@ -178,8 +232,12 @@ namespace inmueble_Heredia.Controllers {
                         c.avatarFile.CopyTo(stream);
                     }
                 
+                TempData["Mensaje"] = "Avatar actualizado correctamente";
                 ru.Modificar(original);
 
+                if(User.IsInRole("Empleado")) {
+                    return View("Index", "Propietario");
+                }
                 return RedirectToAction(nameof(Index));
             } catch (Exception ex) {
                 throw;
@@ -199,7 +257,13 @@ namespace inmueble_Heredia.Controllers {
         [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, IFormCollection collection) {
             try {
-                ru.Baja(id);
+                var resultado = ru.ObtenerPorId(id);
+                ru.Baja(resultado.idUsuario);
+                
+                if(System.IO.File.Exists(Path.Combine(environment.WebRootPath, "Uploads", "avatar_" + id + Path.GetExtension(resultado.avatar))))
+                    System.IO.File.Delete(Path.Combine(environment.WebRootPath, "Uploads", "avatar_" + id + Path.GetExtension(resultado.avatar)));
+
+                TempData["Mensaje"] = "Usuario eliminado correctamente";
                 return RedirectToAction(nameof(Index));
             } catch {
                 throw;
@@ -264,5 +328,16 @@ namespace inmueble_Heredia.Controllers {
             var resultado = ru.ObtenerPorMail(User.Identity.Name);
             return View("Details", resultado);
         }
+
+        public bool validarDatos(Usuario u) {
+            if(u.nombre.Any(char.IsDigit)) {
+                return false;
+            }
+            if(u.apellido.Any(char.IsDigit)) {
+                return false;
+            }
+            return true;
+        }
+
     }
 }

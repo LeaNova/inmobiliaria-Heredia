@@ -21,5 +21,5 @@ public class Pago {
     public string detalle { get; set; }
 
     [ForeignKey(nameof(contratoId))]
-    public Contrato contrato { get; set; }
+    public Contrato? contrato { get; set; }
 }

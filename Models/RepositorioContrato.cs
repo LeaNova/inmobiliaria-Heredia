@@ -18,7 +18,7 @@ namespace inmobiliaria_Heredia.Models {
             using (MySqlConnection connection = new MySqlConnection(connectionString)) {
                 string sql = @"
                     INSERT INTO Contrato (fechaInicio, fechaFinal, alquilerMensual, inmuebleId, inquilinoId)
-                    VALUES (@fechaInicio, @fechaFinal, @alquilerMensual @inmuebleId, @inmuebleId);
+                    VALUES (@fechaInicio, @fechaFinal, @alquilerMensual, @inmuebleId, @inquilinoId);
                     SELECT LAST_INSERT_ID();";
                 using (MySqlCommand command = new MySqlCommand(sql, connection)) {
 
@@ -111,6 +111,112 @@ namespace inmobiliaria_Heredia.Models {
                                 idInquilino = reader.GetInt32(5),
                                 nombre = reader.GetString(7),
                                 apellido = reader.GetString(8)
+                            }
+                        };
+                        res.Add(c);
+                    }
+                    connection.Close();
+                }
+            }
+            return res;
+        }
+
+        public IList<Contrato> ObtenerPorFechas(DateTime fecha1, DateTime fecha2) {
+            IList<Contrato> res = new List<Contrato>();
+            using (MySqlConnection connection = new MySqlConnection(connectionString)) {
+                string sql = @"
+                    SELECT idContrato, fechaInicio, fechaFinal, alquilerMensual, inmuebleId, inquilinoId, inm.direccion, inq.nombre, inq.apellido
+                    FROM Contrato c
+                    INNER JOIN Inmueble inm ON c.inmuebleId = inm.idInmueble
+                    INNER JOIN Inquilino inq ON c.inquilinoId = inq.idInquilino
+                    WHERE fechaInicio AND fechaFinal BETWEEN @fecha1 AND @fecha2";
+                using (MySqlCommand command = new MySqlCommand(sql, connection)) {
+
+                    command.Parameters.Add("@fecha1", MySqlDbType.DateTime).Value = fecha1;
+                    command.Parameters.Add("@fecha2", MySqlDbType.DateTime).Value = fecha2;
+                    command.CommandType = CommandType.Text;
+
+                    connection.Open();
+
+                    var reader = command.ExecuteReader();
+                    while (reader.Read()) {
+                        Contrato c = new Contrato {
+                            idContrato = reader.GetInt32(0),
+                            fechaInicio = reader.GetDateTime(1),
+                            fechaFinal = reader.GetDateTime(2),
+                            alquilerMensual = reader.GetDouble(3),
+                            inmuebleId = reader.GetInt32(4),
+                            inquilinoId = reader.GetInt32(5),
+                            propiedad = new Inmueble {
+                                idInmueble = reader.GetInt32(4),
+                                direccion = reader.GetString(6)
+                            },
+                            inquilino = new Inquilino {
+                                idInquilino = reader.GetInt32(5),
+                                nombre = reader.GetString(7),
+                                apellido = reader.GetString(8)
+                            }
+                        };
+                        res.Add(c);
+                    }
+                    connection.Close();
+                }
+            }
+            return res;
+        }
+
+        public IList<Contrato> ObtenerPorInmueble(int id) {
+            IList<Contrato> res = new List<Contrato>();
+            using (MySqlConnection connection = new MySqlConnection(connectionString)) {
+                string sql = @"
+                    SELECT idContrato, fechaFinal, inmuebleId
+                    FROM Contrato c
+                    INNER JOIN Inmueble i ON c.inmuebleId = i.idInmueble
+                    WHERE i.idInmueble = @id";
+                using (MySqlCommand command = new MySqlCommand(sql, connection)) {
+
+                    command.Parameters.Add("@id", MySqlDbType.Int32).Value = id;
+                    command.CommandType = CommandType.Text;
+
+                    connection.Open();
+
+                    var reader = command.ExecuteReader();
+                    while (reader.Read()) {
+                        Contrato c = new Contrato {
+                            idContrato = reader.GetInt32(0),
+                            fechaFinal = reader.GetDateTime(1),
+                            inmuebleId = reader.GetInt32(2)
+                        };
+                        res.Add(c);
+                    }
+                    connection.Close();
+                }
+            }
+            return res;
+        }
+
+        public IList<Contrato> ObtenerInmueblesDisponibles(DateTime fecha1, DateTime fecha2) {
+            IList<Contrato> res = new List<Contrato>();
+            using (MySqlConnection connection = new MySqlConnection(connectionString)) {
+                string sql = @"
+                    SELECT DISTINCT inmuebleId, i.direccion
+                    FROM Contrato c
+                    INNER JOIN Inmueble i ON c.inmuebleId = i.idInmueble
+                    WHERE fechaInicio AND fechaFinal NOT BETWEEN @fecha1 AND @fecha2";
+                using (MySqlCommand command = new MySqlCommand(sql, connection)) {
+
+                    command.Parameters.Add("@fecha1", MySqlDbType.DateTime).Value = fecha1;
+                    command.Parameters.Add("@fecha2", MySqlDbType.DateTime).Value = fecha2;
+                    command.CommandType = CommandType.Text;
+
+                    connection.Open();
+
+                    var reader = command.ExecuteReader();
+                    while (reader.Read()) {
+                        Contrato c = new Contrato {
+                            inmuebleId = reader.GetInt32(0),
+                            propiedad = new Inmueble {
+                                direccion = reader.GetString(1)
                             }
                         };
                         res.Add(c);

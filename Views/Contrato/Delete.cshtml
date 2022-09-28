@@ -21,36 +21,36 @@
             @Html.DisplayNameFor(model => model.fechaInicio)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.fechaInicio)
+            @(Model.fechaInicio.ToString("dd/MM/yyyy"))
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.fechaFinal)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.fechaFinal)
+            @(Model.fechaFinal.ToString("dd/MM/yyyy"))
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.alquilerMensual)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.alquilerMensual)
+            @("$ " + Model.alquilerMensual)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.inmuebleId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.inmuebleId)
+            @(Model.propiedad.direccion)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.inquilinoId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.inquilinoId)
+            @(Model.inquilino.apellido + ", " + Model.inquilino.nombre)
         </dd>
     </dl>
     
     <form asp-action="Delete">
-        <input type="submit" value="Borrar" class="btn btn-danger" /> |
-        <a asp-action="Index">Volver</a>
+        <input type="submit" value="Borrar" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
     </form>
 </div>

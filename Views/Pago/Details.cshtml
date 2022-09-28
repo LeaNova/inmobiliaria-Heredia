@@ -42,11 +42,12 @@
         </dd>
     </dl>
 </div>
+
 <div>
-    @Html.ActionLink("Editar", "Edit", new { id = Model.numPago }) |
+    <a asp-action="Edit" class="btn btn-primary">Editar</a>
     @if(User.IsInRole("Administrador")) {
-        <a asp-action="Index">Volver</a>
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
     } else {
-        <a asp-action="Index" asp-controller="Contrato">Volver</a>
+        <a asp-action="Index" asp-controller="Contrato" class="btn btn-secondary">Volver</a>
     }
 </div>

@@ -46,7 +46,7 @@ public class Inmueble {
     public int propietarioId { get; set; }
 
     [ForeignKey(nameof(propietarioId))]
-    public Propietario duenio { get; set; }
+    public Propietario? duenio { get; set; }
 
     //Obtencion del Uso
     public string UsoNombre => uso > 0 ? ((enUsos)uso).ToString() : "";
@@ -62,15 +62,15 @@ public class Inmueble {
     }
 
     //Obtencion del Tipo
-    public string TipoNombre => uso > 0 ? ((enTipos)uso).ToString() : "";
+    public string TipoNombre => tipo > 0 ? ((enTipos)tipo).ToString() : "";
 
     public static IDictionary<int, string> ObtenerTipos() {
-        SortedDictionary<int, string> usos = new SortedDictionary<int, string>();
+        SortedDictionary<int, string> tipos = new SortedDictionary<int, string>();
         Type tipoEnumTipo = typeof(enTipos);
 
         foreach(var valor in Enum.GetValues(tipoEnumTipo)) {
-            usos.Add((int)valor, Enum.GetName(tipoEnumTipo, valor));
+            tipos.Add((int)valor, Enum.GetName(tipoEnumTipo, valor));
         }
-        return usos;
+        return tipos;
     }
 }

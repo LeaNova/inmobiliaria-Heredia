@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 namespace inmobiliaria_Heredia.Models {
     
 	public interface IRepositorioInmueble : IRepositorio<Inmueble> {
-
+        
+        IList<Inmueble> ObtenerPorPropietario(Propietario p);
     }
 }

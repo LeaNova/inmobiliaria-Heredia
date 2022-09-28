@@ -24,8 +24,8 @@ public class Contrato {
     public int inquilinoId { get; set; }
 
     [ForeignKey(nameof(inmuebleId))]
-    public Inmueble propiedad { get; set; }
+    public Inmueble? propiedad { get; set; }
 
     [ForeignKey(nameof(inquilinoId))]
-    public Inquilino inquilino { get; set; }
+    public Inquilino? inquilino { get; set; }
 }

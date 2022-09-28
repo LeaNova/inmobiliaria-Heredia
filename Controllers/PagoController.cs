@@ -28,6 +28,12 @@ namespace inmueble_Heredia.Controllers {
                 return View(resultado);
             }
             var lista = rp.ObtenerTodos();
+            if(TempData.ContainsKey("Mensaje")) {
+                ViewBag.Mensaje = TempData["Mensaje"];
+            }
+            if(TempData.ContainsKey("Error")) {
+                ViewBag.Error = TempData["Error"];
+            }
             return View(lista);
         }
 
@@ -56,8 +62,9 @@ namespace inmueble_Heredia.Controllers {
         [Authorize]
         public ActionResult Create(Pago p) {
             try {
-                if(!ModelState.IsValid) {
+                if(ModelState.IsValid) {
                     rp.Alta(p);
+                    TempData["Mensaje"] = "Pago cargado correctamente";
                     return RedirectToAction(nameof(Index));
                 } else {
                     return View(p);
@@ -83,6 +90,7 @@ namespace inmueble_Heredia.Controllers {
                 p.numPago = id;
                 rp.Modificar(p);
 
+                TempData["Mensaje"] = "Pago actualizado correctamente";
                 return RedirectToAction(nameof(Index));
             } catch (Exception ex) {
                 throw;
@@ -93,7 +101,7 @@ namespace inmueble_Heredia.Controllers {
         [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id) {
             var resultado = rp.ObtenerPorId(id);
-            return View();
+            return View(resultado);
         }
 
         // POST: Pago/Delete/5
@@ -103,38 +111,11 @@ namespace inmueble_Heredia.Controllers {
         public ActionResult Delete(int id, IFormCollection collection) {
             try {
                 rp.Baja(id);
+                TempData["Mensaje"] = "Pago eliminado correctamente";
                 return RedirectToAction(nameof(Index));
             } catch (Exception ex) {
                 throw;
             }
-        }
-
-        // POST: Contrato/Terminate/5
-        [Authorize]
-        public ActionResult Terminate(int id) {
-            Contrato terminado = rc.ObtenerPorId(id);
-
-            //Calculo de dias
-            var minimoDias = (terminado.fechaFinal - terminado.fechaInicio)/2;
-            var diasTranscurridos = DateTime.Now - terminado.fechaInicio;
-
-            terminado.fechaFinal = DateTime.Now;
-            rc.Modificar(terminado);
-
-            Pago p = new Pago();
-            p.fechaPago = DateTime.Now;
-            p.importe = terminado.alquilerMensual;
-            p.contratoId = terminado.idContrato;
-            p.detalle = "Multa: importe de 1 (uno) meses de alquiler";
-
-            if(diasTranscurridos < minimoDias) {
-                p.importe *= 2;
-                p.detalle = "Multa: importe de 2 (dos) meses de alquiler";
-            }
-
-            ViewBag.contrato = rc.ObtenerTodos();
-
-            return View("Create", p);
         }
     }
 }

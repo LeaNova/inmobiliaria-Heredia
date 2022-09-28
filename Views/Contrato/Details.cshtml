@@ -2,9 +2,14 @@
 
 @{
     ViewData["Title"] = "Details";
+    var pago = ViewBag.Pago;
 }
 
-<h1>Detalles</h1>
+@if(pago != null) {
+    <h1>¿Desea terminar este contrato?</h1>
+} else {
+    <h1>Detalles</h1>
+}
 
 <div>
     <h4>Contrato</h4>
@@ -20,13 +25,13 @@
             @Html.DisplayNameFor(model => model.fechaInicio)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.fechaInicio)
+            @(Model.fechaInicio.ToString("dd/MM/yyyy"))
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.fechaFinal)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.fechaFinal)
+            @(Model.fechaFinal.ToString("dd/MM/yyyy"))
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.alquilerMensual)
@@ -38,17 +43,46 @@
             @Html.DisplayNameFor(model => model.inmuebleId)
         </dt>
         <dd class = "col-sm-10">
-            @(ViewBag.Inmueble.direccion)
+            @(Model.propiedad.direccion)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.inquilinoId)
         </dt>
         <dd class = "col-sm-10">
-            @(ViewBag.Inquilino.apellido + ", " + ViewBag.Inquilino.nombre)
+            @(Model.inquilino.apellido + ", " + Model.inquilino.nombre)
         </dd>
     </dl>
 </div>
+
+@if(pago != null) {
 <div>
-    @Html.ActionLink("Editar", "Edit", new { id = Model.idContrato }) |
-    <a asp-action="Index">Volver</a>
+    <h4>Pago</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Importe
+        </dt>
+        <dd class = "col-sm-10">
+            @("$ " + pago.importe)
+        </dd>
+        <dt class = "col-sm-2">
+            Detalle
+        </dt>
+        <dd class = "col-sm-10">
+            @(pago.detalle)
+        </dd>
+    </dl>
 </div>
+}
+
+@if(pago != null) {
+    <div>
+        <a asp-action="TerminateCreate" asp-route-id="@Model.idContrato" class="btn btn-primary">Terminar</a>
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+    </div>
+} else {
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.idContrato" class="btn btn-primary">Editar</a>
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+    </div>
+}

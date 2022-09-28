@@ -23,6 +23,12 @@ namespace inmobiliaria_Heredia.Controllers {
         [Authorize]
         public ActionResult Index() {
             var lista = rp.ObtenerTodos();
+            if(TempData.ContainsKey("Mensaje")) {
+                ViewBag.Mensaje = TempData["Mensaje"];
+            }
+            if(TempData.ContainsKey("Error")) {
+                ViewBag.Error = TempData["Error"];
+            }
             return View(lista);
         }
 
@@ -46,13 +52,24 @@ namespace inmobiliaria_Heredia.Controllers {
         public ActionResult Create(Propietario p) {
             try {
                 if(ModelState.IsValid) {
-                    rp.Alta(p);
-                    return RedirectToAction(nameof(Index));
+                    if(validarDatos(p)) {
+                        rp.Alta(p);
+                        TempData["Mensaje"] = "Propietario cargado correctamente";
+                        return RedirectToAction(nameof(Index));
+                    }
+
+                    TempData["Error"] = "Error en entrada de datos";
+                    if(TempData.ContainsKey("Error")) {
+                        ViewBag.Error = TempData["Error"];
+                    }
+                    return View(p);
                 } else {
                     return View(p);
                 }
             } catch (Exception ex) {
-                throw;
+                
+                TempData["Error"] = "No se pudo cargar Propietario, DNI o direccion mail duplicada";
+                return View(p);
             }
         }
 
@@ -69,12 +86,23 @@ namespace inmobiliaria_Heredia.Controllers {
         [Authorize]
         public ActionResult Edit(int id, Propietario p) {
             try {
-                p.idPropietario = id;
-                rp.Modificar(p);
+                if(validarDatos(p)) {
+                    p.idPropietario = id;
+                    rp.Modificar(p);
 
-                return RedirectToAction(nameof(Index));
+                    TempData["Mensaje"] = "Propietario actualizado correctamente";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                TempData["Error"] = "Error en cargar datos";
+                if(TempData.ContainsKey("Error")) {
+                    ViewBag.Error = TempData["Error"];
+                }
+                return View(p);
             } catch (Exception ex) {
-                throw;
+                
+                TempData["Error"] = "No se pudo cargar Propietario, DNI o direccion mail duplicada";
+                return View(p);
             }
         }
 
@@ -89,13 +117,33 @@ namespace inmobiliaria_Heredia.Controllers {
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Administrador")]
-        public ActionResult Delete(int id, IFormCollection collection) {
+        public ActionResult Delete(int id, Propietario p) {
             try {
                 rp.Baja(id);
+                
+                TempData["Mensaje"] = "Propietario eliminado correctamente";
                 return RedirectToAction(nameof(Index));
             } catch (Exception ex) {
-                throw;
+                
+                TempData["Error"] = "No se puede borrar un propietario con un inmueble en lista";
+                return RedirectToAction(nameof(Index));
             }
+        }
+
+        public bool validarDatos(Propietario p) {
+            if(p.nombre.Any(char.IsDigit)) {
+                return false;
+            }
+            if(p.apellido.Any(char.IsDigit)) {
+                return false;
+            }
+            if(p.DNI.Any(char.IsLetter)) {
+                return false;
+            }
+            if(p.telefono.Any(char.IsLetter)) {
+                return false;
+            }
+            return true;
         }
     }
 }

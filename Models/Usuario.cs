@@ -25,10 +25,10 @@ public class Usuario {
     public string pass { get; set; }
     
     [Display(Name = "Avatar")]
-    public string avatar { get; set; }
+    public string? avatar { get; set; }
 
     [Display(Name = "Avatar"), NotMapped]
-    public IFormFile avatarFile { get; set; }
+    public IFormFile? avatarFile { get; set; }
 
     [Display(Name = "Acceso")]
     public int access { get; set; }

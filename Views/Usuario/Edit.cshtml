@@ -46,7 +46,7 @@
         <form asp-action="EditPass" asp-route-id="@ViewBag.id">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label name="passOld" class="control-label">Contraseña</label>
+                <label name="passOld" class="control-label">Contraseña actual</label>
                 <input type="password" name="passOld" class="form-control" />
                 <span name="passOld" class="text-danger"></span>
             </div>
@@ -56,9 +56,9 @@
                 <span name="passNew" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="pass" class="control-label">Nueva contraseña</label>
-                <input asp-for="pass" class="form-control" />
-                <span asp-validation-for="pass" class="text-danger"></span>
+                <label name="pass" class="control-label">Repetir contraseña</label>
+                <input type="password" name="pass" class="form-control" />
+                <span name="pass" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Actualizar" class="btn btn-primary" />
@@ -71,9 +71,9 @@
         <form asp-action="EditAvatar" enctype="multipart/form-data" asp-route-id="@ViewBag.id">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="avatarFile" class="control-label"></label>
-                <input type="file" asp-for="avatarFile" class="form-control" />
-                <span asp-validation-for="avatarFile" class="text-danger"></span>
+                <label name="avatarFile" class="control-label"></label>
+                <input type="file" name="avatarFile" class="form-control" />
+                <span name="avatarFile" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Actualizar" class="btn btn-primary" />
@@ -82,8 +82,9 @@
     </div>
 </div>
 
+<hr />
 <div>
-    <a asp-action="Index">Volver</a>
+    <a asp-action="Index" class="btn btn-secondary">Volver</a>
 </div>
 
 @section Scripts {

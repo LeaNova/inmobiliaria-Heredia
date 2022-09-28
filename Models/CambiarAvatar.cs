@@ -5,6 +5,6 @@ namespace inmobiliaria_Heredia.Models;
 
 public class CambiarAvatar {
 
-    [Display(Name = "Avatar"), NotMapped]
+    [Display(Name = "Avatar"), Required]
     public IFormFile avatarFile { get; set; }
 }

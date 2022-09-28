@@ -11,7 +11,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Inmobiliaria H's</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -21,37 +21,54 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         @if(User.Identity.IsAuthenticated) {
                             
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Propietario" asp-action="Index"><i class="fa-solid fa-user"></i>Propietarios</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Propietario" asp-action="Index"><i class="fa-solid fa-user"></i>Propietarios</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Inquilino" asp-action="Index"><i class="fa-solid fa-users"></i>Inquilinos</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Inquilino" asp-action="Index"><i class="fa-solid fa-users"></i>Inquilinos</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Inmueble" asp-action="Index"><i class="fa-solid fa-building"></i>Inmuebles</a>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-white" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="lnr lnr-user"></span> <i class="fa-solid fa-building"></i>Inmuebles
+                                </a>
+
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item text-dark" asp-controller="Inmueble" asp-action="Index"><i class="fa-solid fa-list"></i>Índice</a></li>
+                                    <li><a class="dropdown-item text-dark" asp-controller="Inmueble" asp-action="Disponibles"><i class="fa-solid fa-check"></i>Disponibles</a></li>
+                                </ul>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Contrato" asp-action="Index"><i class="fa-solid fa-file-pen"></i>Contratos</a>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-white" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="lnr lnr-user"></span> <i class="fa-solid fa-file-pen"></i>Contratos
+                                </a>
+
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item text-dark" asp-controller="Contrato" asp-action="Index"><i class="fa-solid fa-list"></i>Índice</a></li>
+                                    <li><a class="dropdown-item text-dark" asp-controller="Contrato" asp-action="Search"><i class="fa-solid fa-magnifying-glass"></i>Busquedas</a></li>
+                                </ul>
                             </li>
+
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Pago" asp-action="Index"><i class="fa-solid fa-receipt"></i>Pagos</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Pago" asp-action="Index"><i class="fa-solid fa-receipt"></i>Pagos</a>
                             </li>
 
                             @if(User.IsInRole("Administrador")) {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index"><i class="fa-solid fa-circle-user"></i>Usuarios</a>
+                                    <a class="nav-link text-white" asp-area="" asp-controller="Usuario" asp-action="Index"><i class="fa-solid fa-circle-user"></i>Usuarios</a>
                                 </li>
                             }
 
                             <div class="dropdown">
-                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class="lnr lnr-user"></span> @User.Identity.Name
                                 </a>
 
@@ -66,6 +83,22 @@
             </div>
         </nav>
     </header>
+
+    <main role="main" class="container">
+        <div class="">
+            @if(ViewBag.Mensaje != null) {
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <strong>Información:</strong> @ViewBag.Mensaje
+                </div>
+            }
+            @if(ViewBag.Error != null) {
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					<strong>¡Error!</strong> @ViewBag.Error
+				</div>
+            }
+        </div>
+    </main>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
