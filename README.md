@@ -5,5 +5,5 @@ user: lea96_2@mail.com
 pass: 123
 
 Usuario con rol de "Empleado":
-user: pruebas5@mail.com
-pass: asdqwe
+user: amo@mail.com
+pass: 123456789
