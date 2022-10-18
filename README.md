@@ -7,3 +7,12 @@ pass: 123
 Usuario con rol de "Empleado":
 user: amo@mail.com
 pass: 123456789
+
+
+
+
+ulp.api.net@gmail.com
+
+ktitieuikmuzcuup
+smtp.gmail.com
+465

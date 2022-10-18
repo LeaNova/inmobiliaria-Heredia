@@ -5,6 +5,7 @@ namespace inmobiliaria_Heredia.Models;
 
 public class Contrato {
 
+    [Key]
     [Display(Name = "Código")]
     public int idContrato { get; set; }
 
