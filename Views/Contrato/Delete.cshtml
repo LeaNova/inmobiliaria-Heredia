@@ -1,0 +1,56 @@
+@model inmobiliaria_Heredia.Models.Contrato
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Borrar</h1>
+
+<h3>¿Quieres borrar este Contrato?</h3>
+<div>
+    <h4>Contrato</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.idContrato)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.idContrato)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.fechaInicio)
+        </dt>
+        <dd class = "col-sm-10">
+            @(Model.fechaInicio.ToString("dd/MM/yyyy"))
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.fechaFinal)
+        </dt>
+        <dd class = "col-sm-10">
+            @(Model.fechaFinal.ToString("dd/MM/yyyy"))
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.alquilerMensual)
+        </dt>
+        <dd class = "col-sm-10">
+            @("$ " + Model.alquilerMensual)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.inmuebleId)
+        </dt>
+        <dd class = "col-sm-10">
+            @(Model.propiedad.direccion)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.inquilinoId)
+        </dt>
+        <dd class = "col-sm-10">
+            @(Model.inquilino.apellido + ", " + Model.inquilino.nombre)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="submit" value="Borrar" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+    </form>
+</div>

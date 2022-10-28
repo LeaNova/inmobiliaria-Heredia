@@ -1,0 +1,78 @@
+@model IEnumerable<inmobiliaria_Heredia.Models.Contrato>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Índice de Contratos</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Nuevo Contrato</a>
+    <a asp-action="Search" class="btn btn-primary">Busquedas</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.idContrato)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fechaInicio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fechaFinal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.alquilerMensual)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.inmuebleId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.inquilinoId)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td rowspan="2">
+                @Html.DisplayFor(modelItem => item.idContrato)
+            </td>
+            <td rowspan="2">
+                @(item.fechaInicio.ToString("dd/MM/yyyy"))
+            </td>
+            <td rowspan="2">
+                @(item.fechaFinal.ToString("dd/MM/yyyy"))
+            </td>
+            <td rowspan="2">
+                @("$ " + item.alquilerMensual)
+            </td>
+            <td rowspan="2">
+                @(item.propiedad.direccion)
+            </td>
+            <td rowspan="2">
+                @(item.inquilino.apellido + ", " + item.inquilino.nombre)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.idContrato" title="Editar"><i class="fa-solid fa-pen-to-square fa-xl"></i></a> |
+                <a asp-action="Details" asp-route-id="@item.idContrato" title="Detalles"><i class="fa-solid fa-circle-info fa-xl"></i></a> |
+                <a asp-action="Index" asp-controller="Pago" asp-route-id="@item.idContrato" title="Pagos"><i class="fa-solid fa-receipt fa-xl"></i></a> |
+                <a asp-action="Create" asp-controller="Pago" asp-route-id="@item.idContrato" title="Pagar"><i class="fa-solid fa-circle-dollar-to-slot fa-xl"></i></a> |
+
+                @if(User.IsInRole("Administrador")) {
+                    <a asp-action="Delete" asp-route-id="@item.idContrato" title="Borrar"><i class="fa-solid fa-trash-can fa-xl"></i></a>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a asp-action="Create" asp-route-id="@item.idContrato" class="btn btn-primary">Renobar</a>
+                <a asp-action="Terminate" asp-route-id="@item.idContrato" class="btn btn-primary">Terminar contrato</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -18,23 +18,31 @@ public class Inmueble {
         Individual = 6
     }
 
-    [Key]
+    [Display(Name = "Código")]
     public int idInmueble { get; set; }
 
+    [Display(Name = "Dirección")]
     public string direccion { get; set; }
 
+    [Display(Name = "Uso")]
     public int uso { get; set; }
 
+    [Display(Name = "Tipo")]
     public int tipo { get; set; }
 
+    [Display(Name = "Ambientes")]
     public int cantAmbientes { get; set; }
 
+    [Display(Name = "Coordenadas")]
     public string coordenadas { get; set; }
 
+    [Display(Name = "Precio")]
     public double precio { get; set; }
 
+    [Display(Name = "Disponible")]
     public bool disponible { get; set; }
 
+    [Display(Name = "Propietario")]
     public int propietarioId { get; set; }
 
     [ForeignKey(nameof(propietarioId))]

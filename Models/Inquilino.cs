@@ -4,7 +4,6 @@ namespace inmobiliaria_Heredia.Models;
 
 public class Inquilino {
 
-    [Key]
     [Display(Name = "Código")]
     public int idInquilino { get; set; }
 

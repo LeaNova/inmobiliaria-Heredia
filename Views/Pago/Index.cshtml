@@ -1,0 +1,59 @@
+@model IEnumerable<inmobiliaria_Heredia.Models.Pago>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Índice de pagos</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.numPago)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fechaPago)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.importe)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.contratoId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.detalle)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.numPago)
+            </td>
+            <td>
+                @(item.fechaPago.ToString("dd/MM/yyyy"))
+            </td>
+            <td>
+                @("$ " + item.importe)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.contratoId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.detalle)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.numPago" title="Editar"><i class="fa-solid fa-pen-to-square fa-xl"></i></a> |
+                <a asp-action="Details" asp-route-id="@item.numPago" title="Detalles"><i class="fa-solid fa-circle-info fa-xl"></i></a> |
+
+                @if(User.IsInRole("Administrador")) {
+                    <a asp-action="Delete" asp-route-id="@item.numPago" title="Borrar"><i class="fa-solid fa-trash-can fa-xl"></i></a>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

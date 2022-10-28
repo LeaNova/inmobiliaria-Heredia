@@ -1,0 +1,55 @@
+@model inmobiliaria_Heredia.Models.Contrato
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Editar</h1>
+
+<h4>Contrato</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="fechaInicio" class="control-label"></label>
+                <input type="Date" asp-for="fechaInicio" class="form-control" />
+                <span asp-validation-for="fechaInicio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="fechaFinal" class="control-label"></label>
+                <input type="Date" asp-for="fechaFinal" class="form-control" />
+                <span asp-validation-for="fechaFinal" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Inmueble</label>
+                <select asp-for="inmuebleId" class="form-control">
+                    @foreach (var item in (IList<Inmueble>)ViewBag.Inmueble)
+                    {
+                        @:<option @(item.idInmueble == Model.inmuebleId ? "selected" : "") value="@item.idInmueble">@(item.direccion)</option>
+                    }
+                </select>
+                <span asp-validation-for="inmuebleId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Inquilino</label>
+                <select asp-for="inquilinoId" class="form-control">
+                    @foreach (var item in (IList<Inquilino>)ViewBag.Inquilino)
+                    {
+                        @:<option @(item.idInquilino == Model.inquilinoId ? "selected" : "") value="@item.idInquilino">@(item.apellido + ", " + item.nombre)</option>
+                    }
+                </select>
+                <span asp-validation-for="inquilinoId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Volver</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
