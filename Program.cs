@@ -1,43 +1,54 @@
 using System.Security.Claims;
 using inmobiliaria_Heredia.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 // Add services to the container.
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+	serverOptions.ListenAnyIP(5000);
+	serverOptions.ListenAnyIP(5001, listenOptions => listenOptions.UseHttps() );
+});
+
 builder.Services.AddControllersWithViews();
+//JwtBearerDefaults.AuthenticationScheme
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-        .AddCookie(options =>
-        {
+        .AddCookie(options => {
             options.LoginPath = "/Usuario/Login";
             options.LogoutPath = "/Usuario/Logout";
             options.AccessDeniedPath = "/Home";
             options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        })
+        .AddJwtBearer(options => {
+			options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters {
+				ValidateIssuer = true,
+				ValidateAudience = true,
+				ValidateLifetime = true,
+				ValidateIssuerSigningKey = true,
+				ValidIssuer = configuration["TokenAuthentication:Issuer"],
+				ValidAudience = configuration["TokenAuthentication:Audience"],
+				IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(
+					configuration["TokenAuthentication:SecretKey"]))
+			};
         });
 
 builder.Services.AddAuthorization(options => {
-    //options.AddPolicy("Administrador", policy => policy.RequireClaim(ClaimTypes.Role, "Administrador"));
     options.AddPolicy("Administrador", policy => policy.RequireRole("Administrador"));
 });
 
-builder.Services.AddTransient<IRepositorio<Propietario>, RepositorioPropietario>();
-builder.Services.AddTransient<IRepositorioPropietario, RepositorioPropietario>();
-
-builder.Services.AddTransient<IRepositorio<Inquilino>, RepositorioInquilino>();
-builder.Services.AddTransient<IRepositorioInquilino, RepositorioInquilino>();
-
-builder.Services.AddTransient<IRepositorio<Inmueble>, RepositorioInmueble>();
-builder.Services.AddTransient<IRepositorioInmueble, RepositorioInmueble>();
-
-builder.Services.AddTransient<IRepositorio<Contrato>, RepositorioContrato>();
-builder.Services.AddTransient<IRepositorioContrato, RepositorioContrato>();
-
-builder.Services.AddTransient<IRepositorio<Pago>, RepositorioPago>();
-builder.Services.AddTransient<IRepositorioPago, RepositorioPago>();
-
-builder.Services.AddTransient<IRepositorio<Usuario>, RepositorioUsuario>();
-builder.Services.AddTransient<IRepositorioUsuario, RepositorioUsuario>();
+builder.Services.AddDbContext<DataContext>(
+    dbContextOptions => dbContextOptions
+        .UseMySql(
+		configuration["ConnectionStrings:DefaultConnection"],
+		ServerVersion.AutoDetect(configuration["ConnectionStrings:DefaultConnection"]))
+        .LogTo(Console.WriteLine, LogLevel.Information)
+        .EnableSensitiveDataLogging()
+        .EnableDetailedErrors()
+);
 
 var app = builder.Build();
 
@@ -49,7 +60,9 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//comentarlo para que no redirija a https
+//app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -61,6 +74,3 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.Run();
-/*
-[Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
-*/
