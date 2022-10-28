@@ -3,6 +3,7 @@ using inmobiliaria_Heredia.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
