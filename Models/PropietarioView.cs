@@ -10,19 +10,19 @@ public class PropietarioView {
         this.DNI = p.DNI;
         this.telefono = p.telefono;
         this.Email = p.Email;
+        this.foto = p.foto;
     }
 
-    [Display(Name = "Nombre")]
     public String nombre { get; set; }
 
-    [Display(Name = "Apellido")]
     public String apellido { get; set; }
 
     public String DNI { get; set; }
 
-    [Display(Name = "Teléfono")]
     public String telefono { get; set; }
 
     [EmailAddress]
     public String Email { get; set; }
+
+    public String foto { get; set; }
 }

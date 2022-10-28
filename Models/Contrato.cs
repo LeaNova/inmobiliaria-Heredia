@@ -6,22 +6,22 @@ namespace inmobiliaria_Heredia.Models;
 public class Contrato {
 
     [Key]
-    [Display(Name = "Código")]
     public int idContrato { get; set; }
 
-    [Display(Name = "F. Inicial")]
+    public string fechaInicio { get; set; }
+
+    public string fechaFinal { get; set; }
+
+    /*
     public DateTime fechaInicio { get; set; }
 
-    [Display(Name = "F. Finalización")]
     public DateTime fechaFinal { get; set; }
+    */
 
-    [Display(Name = "Alquiler")]
     public double alquilerMensual { get; set; }
 
-    [Display(Name = "Inmueble")]
     public int inmuebleId { get; set; }
 
-    [Display(Name = "Inquilino")]
     public int inquilinoId { get; set; }
 
     [ForeignKey(nameof(inmuebleId))]

@@ -37,6 +37,8 @@ public class Inmueble {
 
     public int propietarioId { get; set; }
 
+    public string? foto { get; set; }
+
     [ForeignKey(nameof(propietarioId))]
     public Propietario? duenio { get; set; }
 

@@ -19,4 +19,6 @@ public class Propietario {
     public String Email { get; set; }
 
     public String pass {get; set; }
+
+    public String foto { get; set; }
 }

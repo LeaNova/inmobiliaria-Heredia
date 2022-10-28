@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>inmobiliaria_Heredia</RootNamespace>
+    <UserSecretsId>91d21fb0-267d-4b72-ab5a-5a2ca1c8d1ce</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,9 +1,12 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using inmobiliaria_Heredia.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 namespace inmobiliaria_Heredia.Api;
@@ -11,40 +14,31 @@ namespace inmobiliaria_Heredia.Api;
 	[ApiController]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("[controller]")]
-	public class ContratoController : ControllerBase {
+	public class PagoController : ControllerBase {
 
 		private readonly DataContext context;
 		private readonly IConfiguration configuration;
 
-		public ContratoController(DataContext context, IConfiguration configuration) {
+		public PagoController(DataContext context, IConfiguration configuration) {
 			this.context = context;
 			this.configuration = configuration;
 		}
 
 		// GET: <controller>
-		[HttpGet]
-		public async Task<ActionResult<Contrato>> obtener() {
-			try {
-				int usuarioId = Int32.Parse(User.Claims.First(x => x.Type == "id").Value);
-				var contratos = context.Contrato
-					.Include(x => x.propiedad)
-					.Include(x => x.inquilino)
-					.Where(x => x.propiedad.propietarioId == usuarioId);
-				
-				return Ok(contratos);
-
-			} catch (Exception ex) {
-				return BadRequest(ex.Message);
-			}
-		}
-
-		// GET: <controller>/id
 		[HttpGet("{id}")]
-		public async Task<ActionResult<Contrato>> obtener(int id) {
+		public async Task<ActionResult<Pago>> Get(int id) {
 			try {
-				var contrato = context.Contrato.Include(x => x.propiedad).Where(x => x.propiedad.idInmueble == id);
-				return Ok(contrato);
-				
+				string usuario = User.Identity.Name;
+				int usuarioId = Int32.Parse(User.Claims.First(x => x.Type == "id").Value);
+
+                var pagos = context.Pago
+                    .Include(x => x.contrato)
+                    .Where(x => x.contratoId == id)
+                    .Include(x => x.contrato.propiedad)
+                    .Where(x => x.contrato.propiedad.propietarioId == usuarioId);
+
+				return Ok(pagos);
+
 			} catch (Exception ex) {
 				return BadRequest(ex.Message);
 			}

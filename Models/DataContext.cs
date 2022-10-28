@@ -18,5 +18,7 @@ namespace inmobiliaria_Heredia.Models {
         public DbSet<Inmueble> Inmueble { get; set; }
 
         public DbSet<Contrato> Contrato { get; set; }
+
+        public DbSet<Pago> Pago { get; set; }
     }
 }
