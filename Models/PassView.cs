@@ -12,5 +12,5 @@ public class PassView {
     public string passNew { get; set; }
 
     [DataType(DataType.Password)]
-    public string pass { get; set; }
+    public string passNewR { get; set; }
 }

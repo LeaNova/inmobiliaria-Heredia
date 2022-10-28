@@ -147,7 +147,7 @@ namespace inmobiliaria_Heredia.Api;
 						numBytesRequested: 256 / 8));
 					
 					if(original.pass == hashed) {
-						if(contraseña.passNew == contraseña.pass) {
+						if(contraseña.passNew == contraseña.passNewR) {
 							original.pass = Convert.ToBase64String(KeyDerivation.Pbkdf2(
 								password: contraseña.passNew,
 								salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
@@ -158,7 +158,7 @@ namespace inmobiliaria_Heredia.Api;
 							context.Propietario.Update(original);
 							await context.SaveChangesAsync();
 
-							return Ok();
+							return Ok(new PropietarioView(original));
 						}
 						return BadRequest("Las contraseñas no coinciden");
 					}
@@ -205,9 +205,9 @@ namespace inmobiliaria_Heredia.Api;
 				var message = new MimeKit.MimeMessage();
 				//message.To.Add(new MailboxAddress(perfil.Nombre, perfil.Email));
 				message.To.Add(new MailboxAddress(perfil.Nombre, "leandro.heredia.96@gmail.com"));
-				//message.From.Add(new MailboxAddress("Sistema", configuration["SMTPUser"]));
-				message.From.Add(new MailboxAddress("Sistema", "lea4nova@gmail.com"));
-				message.Subject = "Hehe te nanda yo!";
+				message.From.Add(new MailboxAddress("Sistema", configuration["SMTPUser"]));
+				//message.From.Add(new MailboxAddress("Sistema", "lea4nova@gmail.com"));
+				message.Subject = "Reestablecer contraseña";
 				message.Body = new TextPart("html") {
 					Text = @$"<h1>Hola</h1>
 					<p>¡Bienvenido, {perfil.Nombre}!</p> tu nueva clave: {rdmPass}"
@@ -237,31 +237,80 @@ namespace inmobiliaria_Heredia.Api;
 
 				//método sin autenticar, busca el propietario x email
 				Propietario p = await context.Propietario.FirstOrDefaultAsync(x => x.Email == email);
-				//para hacer: si el propietario existe, mandarle un email con un enlace con el token
-				//ese enlace servirá para resetear la contraseña
+				
+				if(p != null) {
+					PropietarioView perfil = new PropietarioView(p);
+					//para hacer: si el propietario existe, mandarle un email con un enlace con el token
+					//ese enlace servirá para resetear la contraseña
 
-				var xd = "";
-				return p != null ? Ok(p) : NotFound();
+					var key = new SymmetricSecurityKey(
+						System.Text.Encoding.ASCII.GetBytes(configuration["TokenAuthentication:SecretKey"]));
+					
+					var credenciales = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+					var claims = new List<Claim> {
+						new Claim(ClaimTypes.Name, p.Email),
+						new Claim("id", p.idPropietario.ToString()),
+						new Claim("nombreCompleto", p.apellido + " " + p.nombre),
+						new Claim(ClaimTypes.Role, "Propietario")
+					};
+
+					var token = new JwtSecurityToken(
+						issuer: configuration["TokenAuthentication:Issuer"],
+						audience: configuration["TokenAuthentication:Audience"],
+						claims: claims,
+						expires: DateTime.Now.AddMinutes(60),
+						signingCredentials: credenciales
+					);
+
+					var wToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+					var url = "http://192.168.0.17:5000/Propietario/token?access_token=" + wToken;
+
+					//Todo del mail
+					var message = new MimeKit.MimeMessage();
+					//message.To.Add(new MailboxAddress(perfil.Nombre, perfil.Email));
+					message.To.Add(new MailboxAddress(perfil.nombre, "leandro.heredia.96@gmail.com"));
+					message.From.Add(new MailboxAddress("Sistema", configuration["SMTPUser"]));
+					//message.From.Add(new MailboxAddress("Sistema", "lea4nova@gmail.com"));
+					message.Subject = "Reestablecer contraseña";
+					message.Body = new TextPart("html") {
+						Text = @$"<h1>Hola</h1>
+						<p>¡Bienvenido, {perfil.nombre}! <a href={url} >Restablecer</a> </p>"
+					};
+					message.Headers.Add("Encabezado", "Valor");
+
+					MailKit.Net.Smtp.SmtpClient client = new SmtpClient();
+					client.ServerCertificateValidationCallback = (object sender,
+						System.Security.Cryptography.X509Certificates.X509Certificate certificate,
+						System.Security.Cryptography.X509Certificates.X509Chain chain,
+						System.Net.Security.SslPolicyErrors sslPolicyErrors) => { return true; };
+					client.Connect("smtp.gmail.com", 465, MailKit.Security.SecureSocketOptions.Auto);
+					client.Authenticate(configuration["SMTPUser"], configuration["SMTPPass"]);
+					await client.SendAsync(message);
+
+					return p != null ? Ok(p) : NotFound();
+				}
+				return BadRequest("No se encontro usuario");
 			} catch (Exception e) {
 				return BadRequest(e.Message);
 			}
 		}
 
 		public bool isValid(PerfilView pView) {
-			if(pView.nombre.Any(char.IsDigit)) {
+			if(pView.nombre.Any(char.IsDigit) || pView.nombre == "") {
 				return false;
 			}
-			if(pView.apellido.Any(char.IsDigit)) {
+			if(pView.apellido.Any(char.IsDigit) || pView.apellido == "") {
 				return false;
 			}
-			if(pView.DNI.Any(char.IsLetter)) {
+			if(pView.DNI.Any(char.IsLetter) || pView.DNI == "") {
 				return false;
 			}
-			if(pView.telefono.Any(char.IsLetter)) {
+			if(pView.telefono.Any(char.IsLetter) || pView.telefono == "") {
 				return false;
 			}
-			if(!(pView.Email.Contains("@mail.com") || pView.Email.Contains("@gmail.com"))) {
+			if(!(pView.Email.Contains("@mail.com") || pView.Email.Contains("@gmail.com")) || pView.Email == "") {
 				return false;
 			}
 			return true;

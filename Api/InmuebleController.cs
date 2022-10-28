@@ -205,6 +205,9 @@ namespace inmobiliaria_Heredia.Api;
 		}
 
 		public bool isValid(Inmueble i) {
+			if(i.direccion == "") {
+				return false;
+			}
 			if(i.uso < 1) {
 				return false;
 			}

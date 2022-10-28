@@ -1,11 +1,15 @@
 using System.Security.Claims;
 using inmobiliaria_Heredia.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+
+//no se...
+configuration.AddUserSecrets(System.Reflection.Assembly.GetExecutingAssembly());
 
 // Add services to the container.
 builder.WebHost.ConfigureKestrel(serverOptions =>
@@ -13,6 +17,7 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 	serverOptions.ListenAnyIP(5000);
 	serverOptions.ListenAnyIP(5001, listenOptions => listenOptions.UseHttps() );
 });
+
 
 builder.Services.AddControllersWithViews();
 //JwtBearerDefaults.AuthenticationScheme
@@ -34,6 +39,16 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 				IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(
 					configuration["TokenAuthentication:SecretKey"]))
 			};
+            options.Events = new JwtBearerEvents {
+                OnMessageReceived = context => {
+                    var accessToken = context.Request.Query["access_token"];
+                    var path = context.HttpContext.Request.Path;
+                    if(!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/Propietario/token")) {
+                        context.Token = accessToken;
+                    }
+                    return Task.CompletedTask;
+                }
+            };
         });
 
 builder.Services.AddAuthorization(options => {
