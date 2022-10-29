@@ -201,16 +201,15 @@ namespace inmobiliaria_Heredia.Api;
 				context.Propietario.Update(p);
 				await context.SaveChangesAsync();
 
-				//Todo del mail
-				var message = new MimeKit.MimeMessage();
-				//message.To.Add(new MailboxAddress(perfil.Nombre, perfil.Email));
+				var message = new MimeKit.MimeMessage();;
 				message.To.Add(new MailboxAddress(perfil.Nombre, "leandro.heredia.96@gmail.com"));
 				message.From.Add(new MailboxAddress("Sistema", configuration["SMTPUser"]));
-				//message.From.Add(new MailboxAddress("Sistema", "lea4nova@gmail.com"));
 				message.Subject = "Reestablecer contraseña";
 				message.Body = new TextPart("html") {
-					Text = @$"<h1>Hola</h1>
-					<p>¡Bienvenido, {perfil.Nombre}!</p> tu nueva clave: {rdmPass}"
+					Text = @$"<h3>Hola {perfil.Nombre}</h3>
+                    <p>Gracias por confirmar su restablecimiento de contraseña</p>
+                    <p>Su nueva contraseña es: {rdmPass}></p>
+                    <p>Le reiteramos que una vez entrado a su cuenta cambie la contraseña por una nueva que solo usted conozca.</p>"
 				};
 				message.Headers.Add("Encabezado", "Valor");
 
@@ -234,14 +233,10 @@ namespace inmobiliaria_Heredia.Api;
 		[AllowAnonymous]
 		public async Task<IActionResult> passChange([FromForm] string email) {
 			try {
-
-				//método sin autenticar, busca el propietario x email
 				Propietario p = await context.Propietario.FirstOrDefaultAsync(x => x.Email == email);
 				
 				if(p != null) {
 					PropietarioView perfil = new PropietarioView(p);
-					//para hacer: si el propietario existe, mandarle un email con un enlace con el token
-					//ese enlace servirá para resetear la contraseña
 
 					var key = new SymmetricSecurityKey(
 						System.Text.Encoding.ASCII.GetBytes(configuration["TokenAuthentication:SecretKey"]));
@@ -267,16 +262,15 @@ namespace inmobiliaria_Heredia.Api;
 
 					var url = "http://192.168.0.17:5000/Propietario/token?access_token=" + wToken;
 
-					//Todo del mail
 					var message = new MimeKit.MimeMessage();
-					//message.To.Add(new MailboxAddress(perfil.Nombre, perfil.Email));
 					message.To.Add(new MailboxAddress(perfil.nombre, "leandro.heredia.96@gmail.com"));
 					message.From.Add(new MailboxAddress("Sistema", configuration["SMTPUser"]));
-					//message.From.Add(new MailboxAddress("Sistema", "lea4nova@gmail.com"));
 					message.Subject = "Reestablecer contraseña";
 					message.Body = new TextPart("html") {
-						Text = @$"<h1>Hola</h1>
-						<p>¡Bienvenido, {perfil.nombre}! <a href={url} >Restablecer</a> </p>"
+						Text = @$"<h3>Hola {perfil.apellido + ' ' + perfil.nombre}</h3>
+                        <p>Hemos recibido una petición para restablecer su contraseña</p>
+                        <p>Ingresa en el siguiente <a href={url}>enlace</a> para confirmar el restablecimiento de su contraseña por una nueva. Una vez confirmada la petición se le enviara un nuevo correo con su nueva clase, le pedimos que una vez entrado a su perfil cambie a una contraseña nueva.</p>
+                        <p>Si no ha sido usted por favor desestime este mensaje.</p>"
 					};
 					message.Headers.Add("Encabezado", "Valor");
 
