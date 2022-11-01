@@ -32,6 +32,7 @@ namespace inmobiliaria_Heredia.Api;
 					if(isValid(i)) {
 						i.disponible = true;
 						i.propietarioId = propietarioId;
+						i.precio = i.precio/10;
 						
 						if(i.foto != "") {
 							MemoryStream stream1 = new MemoryStream(Convert.FromBase64String(i.foto));

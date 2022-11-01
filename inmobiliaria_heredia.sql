@@ -24,8 +24,8 @@ DROP TABLE IF EXISTS `contrato`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `contrato` (
   `idContrato` int(11) NOT NULL AUTO_INCREMENT,
-  `fechaInicio` date NOT NULL,
-  `fechaFinal` date NOT NULL,
+  `fechaInicio` varchar(20) NOT NULL,
+  `fechaFinal` varchar(20) NOT NULL,
   `alquilerMensual` double NOT NULL,
   `inmuebleId` int(11) NOT NULL,
   `inquilinoId` int(11) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `contrato` (
   KEY `inquilinoId` (`inquilinoId`),
   CONSTRAINT `inmuebleId` FOREIGN KEY (`inmuebleId`) REFERENCES `inmueble` (`idInmueble`),
   CONSTRAINT `inquilinoId` FOREIGN KEY (`inquilinoId`) REFERENCES `inquilino` (`idInquilino`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,7 @@ CREATE TABLE `contrato` (
 
 LOCK TABLES `contrato` WRITE;
 /*!40000 ALTER TABLE `contrato` DISABLE KEYS */;
-INSERT INTO `contrato` VALUES (1,'2022-09-10','2022-09-21',75000,2,2),(2,'2022-09-10','2022-09-21',133000,3,5),(4,'2022-09-01','2022-09-25',100000,6,7),(5,'2022-12-31','2023-03-27',45000,6,6);
+INSERT INTO `contrato` VALUES (1,'2022-09-10','2022-09-21',75000,2,2),(2,'2022-09-10','2022-09-21',133000,3,5),(4,'2022-09-01','2022-09-25',100000,6,7),(5,'2022-12-31','2023-03-27',45000,6,6),(8,'2022-10-05','2022-09-29',50000,7,6),(9,'2022-11-01','2022-11-30',50000,7,2);
 /*!40000 ALTER TABLE `contrato` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -64,10 +64,11 @@ CREATE TABLE `inmueble` (
   `precio` double NOT NULL,
   `disponible` tinyint(1) NOT NULL,
   `propietarioId` int(11) NOT NULL,
+  `foto` varchar(50) NOT NULL,
   PRIMARY KEY (`idInmueble`),
   KEY `propietarioId` (`propietarioId`),
   CONSTRAINT `propietarioId` FOREIGN KEY (`propietarioId`) REFERENCES `propietario` (`idPropietario`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -76,7 +77,7 @@ CREATE TABLE `inmueble` (
 
 LOCK TABLES `inmueble` WRITE;
 /*!40000 ALTER TABLE `inmueble` DISABLE KEYS */;
-INSERT INTO `inmueble` VALUES (1,'San calle 175',1,1,3,'-11.55, -22.23',23500,1,7),(2,'Alguna calle 1500',1,2,3,'-33.302134,-66.336876',27500,1,2),(3,'No se al 2500',2,4,4,'-37.375534,86.375576',38500,1,12),(4,'Nueva calle 1755',2,6,2,'-33.600034,-65.156900',55000,0,12),(5,'Calle tripiante 1780',1,2,4,'-33.30001,-66.112276',48500,0,2),(6,'Calle comercial 156',2,5,7,'-32.55,-67.44',100000,1,1);
+INSERT INTO `inmueble` VALUES (1,'San calle 175',1,1,3,'-11.55, -22.23',23500,1,7,''),(2,'Alguna calle 1500',1,2,3,'-33.302134,-66.336876',27500,1,2,''),(3,'No se al 2500',2,4,4,'-37.375534,86.375576',38500,0,12,'/Uploads\\inmueble_12142044.png'),(5,'Calle tripiante 1780',1,2,4,'-33.30001,-66.112276',48500,0,2,''),(6,'Calle comercial 156',2,5,7,'-32.55,-67.44',100000,1,1,''),(7,'Sucre 123',1,1,2,'-33.55, -66.45',50000,1,18,''),(8,'San martin 1920',1,4,3,'-33.59, -66.55',75500,1,12,'/Uploads\\inmueble_12405546.png'),(15,'Vientos del Moye 155',1,1,3,'-33.282314,-66.245125',46500,1,12,'/Uploads\\inmueble_12525913.png'),(17,'Calle del Double Exception',2,4,6,'-33.2797,-66.311134',150000,0,12,'/Uploads\\inmueble_12700419.png'),(18,'Avenida del Carmen 173',1,6,1,'-33.283707,-66.31337',55000,1,12,'/Uploads\\inmueble_12215411.png'),(20,'Calle nueva 155',2,3,3,'-33.289963,-66.30687',75200,1,12,'/Uploads\\inmueble_1264422.png');
 /*!40000 ALTER TABLE `inmueble` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -119,14 +120,14 @@ DROP TABLE IF EXISTS `pago`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `pago` (
   `numPago` int(11) NOT NULL AUTO_INCREMENT,
-  `fechaPago` datetime NOT NULL,
+  `fechaPago` varchar(20) NOT NULL,
   `importe` double NOT NULL,
   `contratoId` int(11) NOT NULL,
   `detalle` varchar(150) NOT NULL,
   PRIMARY KEY (`numPago`),
   KEY `contratoId` (`contratoId`),
   CONSTRAINT `contratoId` FOREIGN KEY (`contratoId`) REFERENCES `contrato` (`idContrato`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -135,7 +136,7 @@ CREATE TABLE `pago` (
 
 LOCK TABLES `pago` WRITE;
 /*!40000 ALTER TABLE `pago` DISABLE KEYS */;
-INSERT INTO `pago` VALUES (1,'2022-09-13 21:46:20',35000,1,'1er pago'),(2,'2022-09-13 00:00:00',105000,2,'1er pago'),(4,'2022-09-25 17:50:05',100000,4,'Multa: importe de 1 (un) meses de alquiler'),(5,'2022-09-25 00:00:00',45000,5,'2do pago');
+INSERT INTO `pago` VALUES (1,'2022-09-13',35000,1,'1er pago'),(2,'2022-09-13',105000,2,'1er pago'),(4,'2022-09-25',100000,4,'Multa: importe de 1 (un) meses de alquiler'),(5,'2022-09-25',45000,5,'2do pago'),(6,'2022-09-29',50000,8,'Primer pago'),(7,'2022-09-29',100000,8,'Multa: importe de 2 (dos) meses de alquiler');
 /*!40000 ALTER TABLE `pago` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -153,10 +154,12 @@ CREATE TABLE `propietario` (
   `DNI` varchar(9) NOT NULL,
   `telefono` varchar(15) NOT NULL,
   `Email` varchar(50) NOT NULL,
+  `pass` varchar(60) NOT NULL,
+  `foto` varchar(50) NOT NULL,
   PRIMARY KEY (`idPropietario`),
   UNIQUE KEY `DNI` (`DNI`),
   UNIQUE KEY `Email` (`Email`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -165,7 +168,7 @@ CREATE TABLE `propietario` (
 
 LOCK TABLES `propietario` WRITE;
 /*!40000 ALTER TABLE `propietario` DISABLE KEYS */;
-INSERT INTO `propietario` VALUES (1,'Mateo','Nevus','000','1234','asd@dsa'),(2,'Leandro','Heredia','396','2664','lh@gmail'),(7,'Angel','Gomez','4433','122223','lkj@asdh'),(12,'Anasthasia','Nevus','4125','0297','agnes@mail.com'),(15,'Matias','Bravo','1223','02665','elmati66@mail'),(17,'Laila','Medina','555','333','laila@mail');
+INSERT INTO `propietario` VALUES (1,'Mateo Raiden','Nevus','12500','155455','mateo@mail.com','utFsenRjgHDLVTjCOzD8PiHb1Y7VGPMKTlO/Lf80DSQ=',''),(2,'Leandro','Heredia','396','2664','lh@mail.ccom','ObW08/YU1fXqk2FnT8ij87FiVNlXqfOqWNNR6xp6Kt0=',''),(7,'Angel','Gomez','4433','122223','lkj@mail.com','ObW08/YU1fXqk2FnT8ij87FiVNlXqfOqWNNR6xp6Kt0=',''),(12,'Anasthasia Agnes','Nevus','4125','0297','agnes@mail.com','P5wgYSvMaRwHnlFDd5ow8BZiYsrqwkCtrbbf7xOa0lQ=','/Uploads\\propietario_12.png'),(15,'Matias','Bravo','1223','02665','elmati66@mail.com','ObW08/YU1fXqk2FnT8ij87FiVNlXqfOqWNNR6xp6Kt0=',''),(17,'Laila','Medina','555','333','laila@mail.com','ObW08/YU1fXqk2FnT8ij87FiVNlXqfOqWNNR6xp6Kt0=',''),(18,'Mariano','Luzza','654987','546798','mluzza@mail.com','ObW08/YU1fXqk2FnT8ij87FiVNlXqfOqWNNR6xp6Kt0=','');
 /*!40000 ALTER TABLE `propietario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -208,4 +211,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-09-27 22:34:39
+-- Dump completed on 2022-10-31 21:21:37
